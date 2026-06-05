@@ -1,0 +1,322 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-color: #0b111e;
+    color: #f1f5f9;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    margin: 0;
+}
+
+.leaflet-layer, .leaflet-control-zoom-in, .leaflet-control-zoom-out {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
+
+/* Theme Design System Variables */
+:root {
+    --darkBg: #f8fafc;
+    --panelBg: #ffffff;
+    --borderSlate: #e2e8f0;
+    --textPrimary: #0f172a;
+    --textSecondary: #334155;
+    --textMuted: #64748b;
+    --brandBlue: #2563eb;
+}
+
+[data-theme="dark"] {
+    --darkBg: #0b111e;
+    --panelBg: #131c2e;
+    --borderSlate: #1e293b;
+    --textPrimary: #f1f5f9;
+    --textSecondary: #94a3b8;
+    --textMuted: #64748b;
+    --brandBlue: #3b82f6;
+}
+
+/* General Light Theme Class Overrides */
+[data-theme="light"] {
+    color-scheme: light;
+}
+
+[data-theme="light"] body {
+    background-color: var(--darkBg) !important;
+    color: var(--textSecondary) !important;
+}
+
+[data-theme="light"] .text-slate-100,
+[data-theme="light"] .text-slate-200,
+[data-theme="light"] .text-slate-300 {
+    color: var(--textSecondary) !important;
+}
+
+[data-theme="light"] .text-slate-400 {
+    color: #475569 !important;
+}
+
+[data-theme="light"] .text-slate-500 {
+    color: #64748b !important;
+}
+
+[data-theme="light"] .text-white {
+    color: var(--textPrimary) !important;
+}
+
+/* Ensure text stays white in buttons/badges/alerts */
+[data-theme="light"] .bg-brandBlue .text-white,
+[data-theme="light"] .bg-statusRed .text-white,
+[data-theme="light"] .bg-statusGreen .text-white,
+[data-theme="light"] .bg-emerald-950\/90 .text-white,
+[data-theme="light"] .bg-red-950\/90 .text-white,
+[data-theme="light"] .btn .text-white,
+[data-theme="light"] button .text-white,
+[data-theme="light"] .bg-blue-600 .text-white,
+[data-theme="light"] .bg-red-600 .text-white,
+[data-theme="light"] .bg-emerald-600 .text-white,
+[data-theme="light"] .bg-amber-600 .text-white,
+[data-theme="light"] .bg-violet-600 .text-white,
+[data-theme="light"] .bg-indigo-600 .text-white,
+[data-theme="light"] .bg-brandBlue * {
+    color: inherit;
+}
+
+[data-theme="light"] .bg-brandBlue .text-white,
+[data-theme="light"] button span {
+    color: inherit;
+}
+
+[data-theme="light"] button.bg-brandBlue,
+[data-theme="light"] button.bg-blue-600,
+[data-theme="light"] button.bg-red-600,
+[data-theme="light"] button.bg-slate-900\/80 {
+    color: #ffffff !important;
+}
+
+[data-theme="light"] button.bg-slate-900\/80 span,
+[data-theme="light"] button.bg-slate-900\/80 i {
+    color: #ffffff !important;
+}
+
+/* Fix input & select components */
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+    background-color: #ffffff !important;
+    color: var(--textPrimary) !important;
+    border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] input::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* Card & panel overrides */
+[data-theme="light"] .bg-slate-900,
+[data-theme="light"] .bg-slate-900\/60,
+[data-theme="light"] .bg-slate-950\/95 {
+    background-color: #f1f5f9 !important;
+    color: var(--textPrimary) !important;
+    border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .bg-panelBg {
+    background-color: var(--panelBg) !important;
+}
+
+[data-theme="light"] .bg-darkBg {
+    background-color: var(--darkBg) !important;
+}
+
+[data-theme="light"] .border-borderSlate,
+[data-theme="light"] .border-borderSlate\/60,
+[data-theme="light"] .border-borderSlate\/40 {
+    border-color: var(--borderSlate) !important;
+}
+
+[data-theme="light"] .hover\:bg-slate-800\/50:hover {
+    background-color: #f1f5f9 !important;
+    color: var(--textPrimary) !important;
+}
+
+/* Disable dark invert on map layers for light mode */
+[data-theme="light"] .leaflet-layer,
+[data-theme="light"] .leaflet-control-zoom-in,
+[data-theme="light"] .leaflet-control-zoom-out {
+    filter: none !important;
+}
+
+/* Supply Chain Preloader Animation */
+.preloader-container {
+    background: radial-gradient(circle at center, #0f1c3f 0%, #070b13 100%);
+    overflow: hidden;
+}
+
+.preloader-logistics-flow {
+    position: relative;
+    width: 320px;
+    height: 100px;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+}
+
+.logistics-station {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    background: rgba(30, 41, 59, 0.5);
+    border: 2px solid #1e293b;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.sorting-station {
+    border-color: #3b82f6;
+    animation: pulse-border-blue 2s infinite ease-in-out;
+}
+
+.sorting-laser-line {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    height: 2px;
+    background: #3b82f6;
+    box-shadow: 0 0 8px #2563eb;
+    animation: sweep-laser-vertical 2s infinite ease-in-out;
+}
+
+.logistics-route {
+    position: relative;
+    flex: 1;
+    height: 4px;
+    margin: 0 10px;
+}
+
+.route-dot-path {
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, #475569, #475569 4px, transparent 4px, transparent 10px);
+    border-radius: 2px;
+}
+
+.logistics-carrier {
+    position: absolute;
+    top: -16px;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: deliver-parcel 4s infinite linear;
+}
+
+.carrier-truck {
+    font-size: 18px;
+}
+
+.carrier-package {
+    position: absolute;
+    top: -4px;
+    right: -2px;
+    transform: rotate(10deg);
+    animation: wobble-package 1s infinite alternate ease-in-out;
+}
+
+.delivery-station {
+    border-color: #10b981;
+    animation: pulse-border-green 2s infinite ease-in-out 2s;
+}
+
+.delivery-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    border: 2px solid #10b981;
+    opacity: 0;
+    animation: pulse-ring 2s infinite ease-out 3.5s;
+}
+
+/* Animations */
+@keyframes pulse-border-blue {
+    0%, 100% { border-color: #1e293b; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    30%, 70% { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+}
+
+@keyframes pulse-border-green {
+    0%, 100% { border-color: #1e293b; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    30%, 70% { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+}
+
+@keyframes sweep-laser-vertical {
+    0%, 100% { top: 6px; opacity: 0.2; }
+    50% { top: 40px; opacity: 1; }
+}
+
+@keyframes deliver-parcel {
+    0% {
+        left: -10px;
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    10% {
+        left: -10px;
+        opacity: 1;
+        transform: scale(1);
+    }
+    20% {
+        left: 0%;
+        transform: scale(1);
+    }
+    80% {
+        left: 90%;
+        opacity: 1;
+        transform: scale(1);
+    }
+    90% {
+        left: 100%;
+        opacity: 1;
+        transform: scale(0.9);
+    }
+    100% {
+        left: 100%;
+        opacity: 0;
+        transform: scale(0.6);
+    }
+}
+
+@keyframes wobble-package {
+    0% { transform: rotate(-5deg); }
+    100% { transform: rotate(15deg); }
+}
+
+@keyframes pulse-ring {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.4);
+        opacity: 0;
+    }
+}
