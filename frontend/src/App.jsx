@@ -44,6 +44,24 @@ const XLSX = window.XLSX;
         // --- MOCK LOGISTICS DATA STORES ---
         const centralWarehouse = { name: "Patna HQ DC", lat: 25.5941, lon: 85.1376 };
 
+        // Helper to generate ETA based on order date and delay minutes
+        const generateETA = (orderDate, delayMins) => {
+            try {
+                const date = new Date(orderDate + "T12:00:00");
+                date.setMinutes(date.getMinutes() + delayMins);
+                const resMonth = date.toLocaleString('en-US', { month: 'short' });
+                const resDay = date.getDate();
+                let resHour = date.getHours();
+                const resMin = String(date.getMinutes()).padStart(2, '0');
+                const resAmpm = resHour >= 12 ? 'PM' : 'AM';
+                resHour = resHour % 12;
+                if (resHour === 0) resHour = 12;
+                return `${resMonth} ${resDay}, ${String(resHour).padStart(2, '0')}:${resMin} ${resAmpm}`;
+            } catch (e) {
+                return "May 23, 05:00 PM";
+            }
+        };
+
 
         // --- SYSTEM SUB-COMPONENTS ---
         const Sidebar = ({ activeTab, setActiveTab, theme, toggleTheme }) => (
@@ -3615,23 +3633,6 @@ const XLSX = window.XLSX;
                 }
             };
 
-            // Helper to generate ETA based on order date and delay minutes
-            const generateETA = (orderDate, delayMins) => {
-                try {
-                    const date = new Date(orderDate + "T12:00:00");
-                    date.setMinutes(date.getMinutes() + delayMins);
-                    const resMonth = date.toLocaleString('en-US', { month: 'short' });
-                    const resDay = date.getDate();
-                    let resHour = date.getHours();
-                    const resMin = String(date.getMinutes()).padStart(2, '0');
-                    const resAmpm = resHour >= 12 ? 'PM' : 'AM';
-                    resHour = resHour % 12;
-                    if (resHour === 0) resHour = 12;
-                    return `${resMonth} ${resDay}, ${String(resHour).padStart(2, '0')}:${resMin} ${resAmpm}`;
-                } catch (e) {
-                    return "May 23, 05:00 PM";
-                }
-            };
 
             // Main Weather Effect Calculator
             const computeWeatherEffects = (hubName, lat, lon) => {
