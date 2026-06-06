@@ -2012,10 +2012,10 @@ const XLSX = window.XLSX;
             
             // API key input states
             const [apiKeyInput, setApiKeyInput] = useState(localStorage.getItem('openweathermap_api_key') || "000bd6759eb2260d3900697d8faf36fd");
-            const [weatherApiKeyInput, setWeatherApiKeyInput] = useState(localStorage.getItem('weatherapi_api_key') || "");
-            const [tomtomApiKeyInput, setTomtomApiKeyInput] = useState(localStorage.getItem('tomtom_api_key') || "");
-            const [visualCrossingApiKeyInput, setVisualCrossingApiKeyInput] = useState(localStorage.getItem('visualcrossing_api_key') || "");
-            const [waqiApiKeyInput, setWaqiApiKeyInput] = useState(localStorage.getItem('waqi_api_key') || "");
+            const [weatherApiKeyInput, setWeatherApiKeyInput] = useState(localStorage.getItem('weatherapi_api_key') || "5c94102e4cf74fd6a36143143260406");
+            const [tomtomApiKeyInput, setTomtomApiKeyInput] = useState(localStorage.getItem('tomtom_api_key') || "yPCbGn1DIPYIoLEnE16Hjzelv2F1PELm");
+            const [visualCrossingApiKeyInput, setVisualCrossingApiKeyInput] = useState(localStorage.getItem('visualcrossing_api_key') || "R22UE4UEGT3RUP4DGEV3B2V37");
+            const [waqiApiKeyInput, setWaqiApiKeyInput] = useState(localStorage.getItem('waqi_api_key') || "d75116f2fa4f039d4b6d8cd3291229c0fc92744c");
             
             // Telemetry integration states
             const [weatherSourceString, setWeatherSourceString] = useState("Weather Feed (Cascade)");
@@ -2463,7 +2463,7 @@ const XLSX = window.XLSX;
             };
 
             const fetchWeatherAPI = async (city) => {
-                const weatherApiKey = (localStorage.getItem('weatherapi_api_key') || "").trim();
+                const weatherApiKey = (localStorage.getItem('weatherapi_api_key') || "5c94102e4cf74fd6a36143143260406").trim();
                 const url = `https://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${city.lat},${city.lon}&aqi=yes`;
                 const res = await fetch(url);
                 if (!res.ok) {
@@ -2503,7 +2503,7 @@ const XLSX = window.XLSX;
             };
 
             const fetchVisualCrossing = async (city) => {
-                const visualCrossingKey = (localStorage.getItem('visualcrossing_api_key') || "").trim();
+                const visualCrossingKey = (localStorage.getItem('visualcrossing_api_key') || "R22UE4UEGT3RUP4DGEV3B2V37").trim();
                 if (!visualCrossingKey) throw new Error("Visual Crossing key not set");
                 const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city.lat},${city.lon}/today?unitGroup=metric&key=${visualCrossingKey}&include=current`;
                 const res = await fetch(url);
@@ -2532,7 +2532,7 @@ const XLSX = window.XLSX;
             };
 
             const fetchWAQI = async (city) => {
-                const waqiKey = (localStorage.getItem('waqi_api_key') || "").trim();
+                const waqiKey = (localStorage.getItem('waqi_api_key') || "d75116f2fa4f039d4b6d8cd3291229c0fc92744c").trim();
                 if (!waqiKey) {
                     throw new Error("No custom WAQI API key provided (skipping demo token to avoid duplicate Shanghai data)");
                 }
@@ -2612,7 +2612,7 @@ const XLSX = window.XLSX;
             // Ingest real-time traffic speeds and travel delays using TomTom flow segment APIs
             const fetchTrafficData = async (currentHubs) => {
                 if (!currentHubs || Object.keys(currentHubs).length === 0) return;
-                const tomtomApiKey = (localStorage.getItem('tomtom_api_key') || "").trim();
+                const tomtomApiKey = (localStorage.getItem('tomtom_api_key') || "yPCbGn1DIPYIoLEnE16Hjzelv2F1PELm").trim();
                 if (!tomtomApiKey) {
                     console.log("No TomTom API key set. Dashboard will use simulated dynamic highway traffic.");
                     setTomtomTrafficData({});
@@ -3447,11 +3447,26 @@ const XLSX = window.XLSX;
                             const keysRes = await fetch("/api/keys");
                             if (keysRes.ok) {
                                 const keys = await keysRes.json();
-                                if (keys.openweathermap) setApiKeyInput(keys.openweathermap);
-                                if (keys.weatherapi) setWeatherApiKeyInput(keys.weatherapi);
-                                if (keys.tomtom) setTomtomApiKeyInput(keys.tomtom);
-                                if (keys.visualcrossing) setVisualCrossingApiKeyInput(keys.visualcrossing);
-                                if (keys.waqi) setWaqiApiKeyInput(keys.waqi);
+                                if (keys.openweathermap) {
+                                    setApiKeyInput(keys.openweathermap);
+                                    localStorage.setItem('openweathermap_api_key', keys.openweathermap);
+                                }
+                                if (keys.weatherapi) {
+                                    setWeatherApiKeyInput(keys.weatherapi);
+                                    localStorage.setItem('weatherapi_api_key', keys.weatherapi);
+                                }
+                                if (keys.tomtom) {
+                                    setTomtomApiKeyInput(keys.tomtom);
+                                    localStorage.setItem('tomtom_api_key', keys.tomtom);
+                                }
+                                if (keys.visualcrossing) {
+                                    setVisualCrossingApiKeyInput(keys.visualcrossing);
+                                    localStorage.setItem('visualcrossing_api_key', keys.visualcrossing);
+                                }
+                                if (keys.waqi) {
+                                    setWaqiApiKeyInput(keys.waqi);
+                                    localStorage.setItem('waqi_api_key', keys.waqi);
+                                }
                             }
                         } catch (err) {
                             console.error("Failed to fetch API keys from server:", err);
