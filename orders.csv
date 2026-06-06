@@ -634,223 +634,224 @@ DLV-54617,"Patna, BR",25.5941,85.1376,358,Delivered,Completed,0,0,0,Completed,St
 DLV-22418,"Darbhanga, BR",26.1542,85.8918,397,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 5, 10:24 PM",Standard Routing,0,46178.22928,Patna HQ DC
 DLV-52753,"Kharagpur, WB",22.3302,87.3237,217,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 6, 07:18 AM",Standard Routing,0,46178.22928,Patna HQ DC
 DLV-85152,"Bhubaneswar, OD",20.2961,85.8245,112,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 6, 10:24 PM",Standard Routing,0,46178.22928,Patna HQ DC
-DLV-10567,"Shillong, ML",25.5788,91.8933,415,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-89211,"Muzaffarpur, BR",26.1209,85.3647,263,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-62880,"Hazaribagh, JH",23.9932,85.3622,452,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-63501,"Bhubaneswar, OD",20.2961,85.8245,596,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-12707,"Ranchi, JH",23.3441,85.3096,642,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-45754,"Asansol, WB",23.674,86.952,617,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-91578,"Siliguri, WB",26.7271,88.3953,279,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-40534,"Gaya, BR",24.7914,85.0002,625,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-17233,"Jamshedpur, JH",22.8046,86.2029,263,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-31714,"Jamshedpur, JH",22.8046,86.2029,450,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-15275,"Kolkata, WB",22.5726,88.3639,228,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-18206,"Gaya, BR",24.7914,85.0002,395,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-30018,"Jamshedpur, JH",22.8046,86.2029,373,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-18234,"Patna, BR",25.5941,85.1376,459,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-86080,"Dhanbad, JH",23.7957,86.4304,167,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-46654,"Hazaribagh, JH",23.9932,85.3622,785,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-41096,"Siliguri, WB",26.7271,88.3953,504,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-25735,"Puri, OD",19.8134,85.8315,278,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-63338,"Darbhanga, BR",26.1542,85.8918,547,Delayed,Congested Highway / Toll Queue,10.4,88,11.87,"Jun 7, 11:52 PM",NH Alt Routing,8276,2026-06-07,Patna HQ DC
-DLV-39198,"Shillong, ML",25.5788,91.8933,539,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-12648,"Muzaffarpur, BR",26.1209,85.3647,678,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-68550,"Bhubaneswar, OD",20.2961,85.8245,700,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-35251,"Bhubaneswar, OD",20.2961,85.8245,128,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-87900,"Shillong, ML",25.5788,91.8933,256,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-25678,"Dhanbad, JH",23.7957,86.4304,133,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-74216,"Gaya, BR",24.7914,85.0002,324,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-57520,"Siliguri, WB",26.7271,88.3953,639,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-33309,"Bhagalpur, BR",25.2425,87.0135,154,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-23847,"Jamshedpur, JH",22.8046,86.2029,451,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-32223,"Dhanbad, JH",23.7957,86.4304,323,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-98975,"Ranchi, JH",23.3441,85.3096,235,Delayed,Congested Highway / Toll Queue,14.5,93,16.05,"Jun 8, 04:03 AM",NH Alt Routing,4394,2026-06-07,Patna HQ DC
-DLV-13807,"Siliguri, WB",26.7271,88.3953,668,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-65733,"Cuttack, OD",20.4625,85.883,613,At Risk,Heavy Highway Traffic,34,55,34.92,"Jun 8, 10:55 PM",NH Alt Routing,5717,2026-06-07,Patna HQ DC
-DLV-14565,"Ranchi, JH",23.3441,85.3096,253,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-34708,"Shillong, ML",25.5788,91.8933,449,Delayed,Congested Highway / Toll Queue,38.5,67,39.62,"Jun 9, 03:37 AM",NH Alt Routing,5316,2026-06-07,Patna HQ DC
-DLV-69056,"Jamshedpur, JH",22.8046,86.2029,506,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-99453,"Puri, OD",19.8134,85.8315,172,At Risk,Heavy Highway Traffic,35.6,41,36.28,"Jun 9, 12:17 AM",NH Alt Routing,1550,2026-06-07,Patna HQ DC
-DLV-70600,"Kolkata, WB",22.5726,88.3639,164,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-52286,"Kharagpur, WB",22.3302,87.3237,734,Delayed,Congested Highway / Toll Queue,19.3,123,21.35,"Jun 8, 09:21 AM",NH Alt Routing,15018,2026-06-07,Patna HQ DC
-DLV-37616,"Kharagpur, WB",22.3302,87.3237,107,Delayed,Congested Highway / Toll Queue,19.3,72,20.5,"Jun 8, 08:30 AM",NH Alt Routing,2020,2026-06-07,Patna HQ DC
-DLV-35648,"Guwahati, AS",26.1445,91.7362,758,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-76443,"Jamshedpur, JH",22.8046,86.2029,444,At Risk,Heavy Highway Traffic,16.9,27,17.35,"Jun 8, 05:21 AM",NH Alt Routing,2122,2026-06-07,Patna HQ DC
-DLV-74159,"Patna, BR",25.5941,85.1376,674,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-20268,"Cuttack, OD",20.4625,85.883,693,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-21220,"Bhagalpur, BR",25.2425,87.0135,251,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-21597,"Patna, BR",25.5941,85.1376,635,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-62139,"Cuttack, OD",20.4625,85.883,456,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-87026,"Puri, OD",19.8134,85.8315,712,Delayed,Congested Highway / Toll Queue,35.6,112,37.47,"Jun 9, 01:28 AM",NH Alt Routing,13306,2026-06-07,Patna HQ DC
-DLV-49763,"Jamshedpur, JH",22.8046,86.2029,489,At Risk,Heavy Highway Traffic,16.9,26,17.33,"Jun 8, 05:20 AM",NH Alt Routing,2219,2026-06-07,Patna HQ DC
-DLV-29252,"Patna, BR",25.5941,85.1376,294,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-37001,"Jamshedpur, JH",22.8046,86.2029,415,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-76218,"Gaya, BR",24.7914,85.0002,511,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-24865,"Hazaribagh, JH",23.9932,85.3622,355,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-37220,"Durgapur, WB",23.5204,87.3119,515,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-38173,"Kolkata, WB",22.5726,88.3639,792,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-82256,"Muzaffarpur, BR",26.1209,85.3647,142,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-68445,"Jamshedpur, JH",22.8046,86.2029,601,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-72375,"Bhagalpur, BR",25.2425,87.0135,176,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-49863,"Dhanbad, JH",23.7957,86.4304,359,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-53856,"Kolkata, WB",22.5726,88.3639,115,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-74945,"Darbhanga, BR",26.1542,85.8918,779,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-50982,"Puri, OD",19.8134,85.8315,362,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-86590,"Durgapur, WB",23.5204,87.3119,700,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-81918,"Jamshedpur, JH",22.8046,86.2029,341,At Risk,Heavy Highway Traffic,16.9,32,17.43,"Jun 8, 05:26 AM",NH Alt Routing,2021,2026-06-07,Patna HQ DC
-DLV-65983,"Dhanbad, JH",23.7957,86.4304,661,At Risk,Heavy Highway Traffic,14.4,26,14.83,"Jun 8, 02:50 AM",NH Alt Routing,2890,2026-06-07,Patna HQ DC
-DLV-78913,"Patna, BR",25.5941,85.1376,745,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-35121,"Durgapur, WB",23.5204,87.3119,527,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-86635,"Ranchi, JH",23.3441,85.3096,697,Delayed,Congested Highway / Toll Queue,14.5,110,16.33,"Jun 8, 04:20 AM",NH Alt Routing,12821,2026-06-07,Patna HQ DC
-DLV-27541,"Bhagalpur, BR",25.2425,87.0135,736,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-23384,"Puri, OD",19.8134,85.8315,637,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-89036,"Asansol, WB",23.674,86.952,770,At Risk,Heavy Highway Traffic,15.1,44,15.83,"Jun 8, 03:50 AM",NH Alt Routing,5610,2026-06-07,Patna HQ DC
-DLV-38772,"Kolkata, WB",22.5726,88.3639,730,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-11125,"Hazaribagh, JH",23.9932,85.3622,113,At Risk,Heavy Highway Traffic,12.6,50,13.43,"Jun 8, 01:26 AM",NH Alt Routing,1448,2026-06-07,Patna HQ DC
-DLV-22352,"Ranchi, JH",23.3441,85.3096,798,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-12003,"Darbhanga, BR",26.1542,85.8918,526,Delayed,Congested Highway / Toll Queue,10.4,78,11.7,"Jun 7, 11:42 PM",NH Alt Routing,7090,2026-06-07,Patna HQ DC
-DLV-73585,"Bhubaneswar, OD",20.2961,85.8245,659,At Risk,Heavy Highway Traffic,34.4,49,35.22,"Jun 8, 11:13 PM",NH Alt Routing,5432,2026-06-07,Patna HQ DC
-DLV-93932,"Muzaffarpur, BR",26.1209,85.3647,535,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-19107,"Guwahati, AS",26.1445,91.7362,590,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-66390,"Darbhanga, BR",26.1542,85.8918,140,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-31322,"Kolkata, WB",22.5726,88.3639,318,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-33858,"Muzaffarpur, BR",26.1209,85.3647,669,Delayed,Congested Highway / Toll Queue,10,117,11.95,"Jun 7, 11:57 PM",NH Alt Routing,13145,2026-06-07,Patna HQ DC
-DLV-33722,"Kharagpur, WB",22.3302,87.3237,258,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-93683,"Kolkata, WB",22.5726,88.3639,588,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-25849,"Bhubaneswar, OD",20.2961,85.8245,545,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-15472,"Cuttack, OD",20.4625,85.883,428,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-13129,"Patna, BR",25.5941,85.1376,620,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-72975,"Jamshedpur, JH",22.8046,86.2029,142,At Risk,Heavy Highway Traffic,16.9,50,17.73,"Jun 8, 05:44 AM",NH Alt Routing,1665,2026-06-07,Patna HQ DC
-DLV-60744,"Darbhanga, BR",26.1542,85.8918,408,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-56166,"Muzaffarpur, BR",26.1209,85.3647,363,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-76809,"Dhanbad, JH",23.7957,86.4304,411,Delayed,Congested Highway / Toll Queue,14.4,73,15.62,"Jun 8, 03:37 AM",NH Alt Routing,5376,2026-06-07,Patna HQ DC
-DLV-12992,"Kolkata, WB",22.5726,88.3639,433,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-19813,"Guwahati, AS",26.1445,91.7362,778,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-87787,"Bhubaneswar, OD",20.2961,85.8245,287,Delayed,Congested Highway / Toll Queue,34.4,109,36.22,"Jun 9, 12:13 AM",NH Alt Routing,6000,2026-06-07,Patna HQ DC
-DLV-19715,"Kolkata, WB",22.5726,88.3639,586,At Risk,Heavy Highway Traffic,18.7,45,19.45,"Jun 8, 07:27 AM",NH Alt Routing,4496,2026-06-07,Patna HQ DC
-DLV-99055,"Asansol, WB",23.674,86.952,550,At Risk,Heavy Highway Traffic,15.1,49,15.92,"Jun 8, 03:55 AM",NH Alt Routing,4631,2026-06-07,Patna HQ DC
-DLV-54731,"Guwahati, AS",26.1445,91.7362,681,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-81268,"Jamshedpur, JH",22.8046,86.2029,554,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-16082,"Patna, BR",25.5941,85.1376,592,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-83102,"Kharagpur, WB",22.3302,87.3237,679,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-92815,"Gaya, BR",24.7914,85.0002,447,At Risk,Heavy Highway Traffic,10.5,33,11.05,"Jun 7, 11:03 PM",NH Alt Routing,2609,2026-06-07,Patna HQ DC
-DLV-24445,"Shillong, ML",25.5788,91.8933,644,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-37727,"Ranchi, JH",23.3441,85.3096,416,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-30597,"Gaya, BR",24.7914,85.0002,727,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-93836,"Kolkata, WB",22.5726,88.3639,504,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-92860,"Guwahati, AS",26.1445,91.7362,742,At Risk,Heavy Highway Traffic,37.7,51,38.55,"Jun 9, 02:33 AM",NH Alt Routing,6288,2026-06-07,Patna HQ DC
-DLV-41162,"Guwahati, AS",26.1445,91.7362,769,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-48659,"Ranchi, JH",23.3441,85.3096,138,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-49425,"Kharagpur, WB",22.3302,87.3237,633,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-68700,"Bhagalpur, BR",25.2425,87.0135,266,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-34617,"Puri, OD",19.8134,85.8315,388,Delayed,Congested Highway / Toll Queue,35.6,120,37.6,"Jun 9, 01:36 AM",NH Alt Routing,8424,2026-06-07,Patna HQ DC
-DLV-56187,"Cuttack, OD",20.4625,85.883,195,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-41423,"Kolkata, WB",22.5726,88.3639,794,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-61491,"Jamshedpur, JH",22.8046,86.2029,545,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-88807,"Durgapur, WB",23.5204,87.3119,216,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-65015,"Asansol, WB",23.674,86.952,330,Delayed,Congested Highway / Toll Queue,15.1,87,16.55,"Jun 8, 04:33 AM",NH Alt Routing,5351,2026-06-07,Patna HQ DC
-DLV-53414,"Ranchi, JH",23.3441,85.3096,734,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-29191,"Shillong, ML",25.5788,91.8933,366,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-92026,"Muzaffarpur, BR",26.1209,85.3647,591,At Risk,Heavy Highway Traffic,10,31,10.52,"Jun 7, 10:31 PM",NH Alt Routing,3120,2026-06-07,Patna HQ DC
-DLV-42704,"Hazaribagh, JH",23.9932,85.3622,512,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-31903,"Dhanbad, JH",23.7957,86.4304,766,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-62042,"Patna, BR",25.5941,85.1376,797,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-13189,"Dhanbad, JH",23.7957,86.4304,696,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-68882,"Ranchi, JH",23.3441,85.3096,597,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-45561,"Guwahati, AS",26.1445,91.7362,703,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-28647,"Siliguri, WB",26.7271,88.3953,500,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-78023,"Bhubaneswar, OD",20.2961,85.8245,289,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-45188,"Patna, BR",25.5941,85.1376,273,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-92326,"Puri, OD",19.8134,85.8315,502,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-89815,"Asansol, WB",23.674,86.952,585,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-14384,"Kharagpur, WB",22.3302,87.3237,538,At Risk,Heavy Highway Traffic,19.3,24,19.7,"Jun 8, 07:42 AM",NH Alt Routing,2225,2026-06-07,Patna HQ DC
-DLV-50656,"Bhubaneswar, OD",20.2961,85.8245,579,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-35612,"Bhagalpur, BR",25.2425,87.0135,588,At Risk,Heavy Highway Traffic,12.6,36,13.2,"Jun 8, 01:12 AM",NH Alt Routing,3607,2026-06-07,Patna HQ DC
-DLV-95095,"Kharagpur, WB",22.3302,87.3237,768,At Risk,Heavy Highway Traffic,19.3,38,19.93,"Jun 8, 07:56 AM",NH Alt Routing,4834,2026-06-07,Patna HQ DC
-DLV-60688,"Hazaribagh, JH",23.9932,85.3622,262,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-73058,"Asansol, WB",23.674,86.952,615,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-87886,"Kolkata, WB",22.5726,88.3639,378,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-95171,"Kharagpur, WB",22.3302,87.3237,137,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-32084,"Shillong, ML",25.5788,91.8933,312,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-99251,"Bhubaneswar, OD",20.2961,85.8245,241,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-71808,"Siliguri, WB",26.7271,88.3953,195,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-55766,"Shillong, ML",25.5788,91.8933,129,At Risk,Heavy Highway Traffic,38.5,28,38.97,"Jun 9, 02:58 AM",NH Alt Routing,878,2026-06-07,Patna HQ DC
-DLV-91742,"Kharagpur, WB",22.3302,87.3237,475,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-78204,"Darbhanga, BR",26.1542,85.8918,157,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-90851,"Cuttack, OD",20.4625,85.883,392,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-62343,"Hazaribagh, JH",23.9932,85.3622,682,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-45743,"Hazaribagh, JH",23.9932,85.3622,709,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-10490,"Asansol, WB",23.674,86.952,216,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-65269,"Cuttack, OD",20.4625,85.883,574,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-54219,"Kolkata, WB",22.5726,88.3639,740,At Risk,Heavy Highway Traffic,18.7,41,19.38,"Jun 8, 07:23 AM",NH Alt Routing,5043,2026-06-07,Patna HQ DC
-DLV-30167,"Kolkata, WB",22.5726,88.3639,736,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-97092,"Shillong, ML",25.5788,91.8933,744,At Risk,Heavy Highway Traffic,38.5,43,39.22,"Jun 9, 03:13 AM",NH Alt Routing,5315,2026-06-07,Patna HQ DC
-DLV-10634,"Patna, BR",25.5941,85.1376,646,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-25000,"Kolkata, WB",22.5726,88.3639,256,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-75708,"Gaya, BR",24.7914,85.0002,461,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-85928,"Durgapur, WB",23.5204,87.3119,784,Delayed,Congested Highway / Toll Queue,15.9,79,17.22,"Jun 8, 05:13 AM",NH Alt Routing,10238,2026-06-07,Patna HQ DC
-DLV-71226,"Bhagalpur, BR",25.2425,87.0135,727,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-99105,"Bhubaneswar, OD",20.2961,85.8245,761,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-84141,"Darbhanga, BR",26.1542,85.8918,716,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-31741,"Guwahati, AS",26.1445,91.7362,105,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-98049,"Jamshedpur, JH",22.8046,86.2029,150,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-56528,"Kharagpur, WB",22.3302,87.3237,327,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-26232,"Kharagpur, WB",22.3302,87.3237,340,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-85947,"Dhanbad, JH",23.7957,86.4304,527,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-72702,"Puri, OD",19.8134,85.8315,751,Delayed,Congested Highway / Toll Queue,35.6,100,37.27,"Jun 9, 01:16 AM",NH Alt Routing,12465,2026-06-07,Patna HQ DC
-DLV-29964,"Muzaffarpur, BR",26.1209,85.3647,633,Delayed,Congested Highway / Toll Queue,10,90,11.5,"Jun 7, 11:30 PM",NH Alt Routing,9626,2026-06-07,Patna HQ DC
-DLV-57051,"Asansol, WB",23.674,86.952,677,Delayed,Congested Highway / Toll Queue,15.1,110,16.93,"Jun 8, 04:56 AM",NH Alt Routing,12491,2026-06-07,Patna HQ DC
-DLV-75422,"Guwahati, AS",26.1445,91.7362,671,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-66711,"Siliguri, WB",26.7271,88.3953,130,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-99106,"Hazaribagh, JH",23.9932,85.3622,477,Delayed,Congested Highway / Toll Queue,12.6,92,14.13,"Jun 8, 02:08 AM",NH Alt Routing,7687,2026-06-07,Patna HQ DC
-DLV-27344,"Ranchi, JH",23.3441,85.3096,568,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-34101,"Muzaffarpur, BR",26.1209,85.3647,427,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-65462,"Kolkata, WB",22.5726,88.3639,201,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-92107,"Guwahati, AS",26.1445,91.7362,270,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-43891,"Muzaffarpur, BR",26.1209,85.3647,739,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-79023,"Jamshedpur, JH",22.8046,86.2029,300,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-83464,"Kharagpur, WB",22.3302,87.3237,172,At Risk,Heavy Highway Traffic,19.3,39,19.95,"Jun 8, 07:57 AM",NH Alt Routing,1474,2026-06-07,Patna HQ DC
-DLV-58682,"Patna, BR",25.5941,85.1376,747,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-47514,"Darbhanga, BR",26.1542,85.8918,522,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-85576,"Gaya, BR",24.7914,85.0002,475,At Risk,Heavy Highway Traffic,10.5,32,11.03,"Jun 7, 11:02 PM",NH Alt Routing,2664,2026-06-07,Patna HQ DC
-DLV-29466,"Siliguri, WB",26.7271,88.3953,610,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-90111,"Kolkata, WB",22.5726,88.3639,557,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-80409,"Gaya, BR",24.7914,85.0002,646,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-96761,"Bhagalpur, BR",25.2425,87.0135,711,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-85667,"Shillong, ML",25.5788,91.8933,456,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-33818,"Bhubaneswar, OD",20.2961,85.8245,581,Delayed,Congested Highway / Toll Queue,34.4,120,36.4,"Jun 9, 12:24 AM",NH Alt Routing,11898,2026-06-07,Patna HQ DC
-DLV-22801,"Ranchi, JH",23.3441,85.3096,198,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-86469,"Bhagalpur, BR",25.2425,87.0135,648,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-92212,"Kharagpur, WB",22.3302,87.3237,733,Delayed,Congested Highway / Toll Queue,19.3,96,20.9,"Jun 8, 08:54 AM",NH Alt Routing,11707,2026-06-07,Patna HQ DC
-DLV-10654,"Hazaribagh, JH",23.9932,85.3622,307,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-66059,"Ranchi, JH",23.3441,85.3096,366,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-90166,"Jamshedpur, JH",22.8046,86.2029,295,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-41324,"Cuttack, OD",20.4625,85.883,620,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-90336,"Kolkata, WB",22.5726,88.3639,239,At Risk,Heavy Highway Traffic,18.7,27,19.15,"Jun 8, 07:09 AM",NH Alt Routing,1292,2026-06-07,Patna HQ DC
-DLV-25593,"Cuttack, OD",20.4625,85.883,711,At Risk,Heavy Highway Traffic,34,36,34.6,"Jun 8, 10:36 PM",NH Alt Routing,4271,2026-06-07,Patna HQ DC
-DLV-67772,"Patna, BR",25.5941,85.1376,534,Delivered,Completed,0,0,0,Completed,Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-89979,"Asansol, WB",23.674,86.952,428,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-45081,"Bhubaneswar, OD",20.2961,85.8245,123,At Risk,Heavy Highway Traffic,34.4,30,34.9,"Jun 8, 10:54 PM",NH Alt Routing,914,2026-06-07,Patna HQ DC
-DLV-54517,"Puri, OD",19.8134,85.8315,239,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-29962,"Puri, OD",19.8134,85.8315,381,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-26203,"Gaya, BR",24.7914,85.0002,474,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-84652,"Asansol, WB",23.674,86.952,573,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-17234,"Kharagpur, WB",22.3302,87.3237,736,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-46548,"Darbhanga, BR",26.1542,85.8918,454,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-63560,"Guwahati, AS",26.1445,91.7362,298,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-83164,"Cuttack, OD",20.4625,85.883,486,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-72306,"Muzaffarpur, BR",26.1209,85.3647,543,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-19089,"Cuttack, OD",20.4625,85.883,492,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-34688,"Dhanbad, JH",23.7957,86.4304,607,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-97418,"Durgapur, WB",23.5204,87.3119,579,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-58758,"Durgapur, WB",23.5204,87.3119,427,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-87152,"Guwahati, AS",26.1445,91.7362,728,At Risk,Heavy Highway Traffic,37.7,46,38.47,"Jun 9, 02:28 AM",NH Alt Routing,5575,2026-06-07,Patna HQ DC
-DLV-90890,"Bhubaneswar, OD",20.2961,85.8245,700,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-87241,"Dhanbad, JH",23.7957,86.4304,311,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-31854,"Shillong, ML",25.5788,91.8933,513,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-21135,"Hazaribagh, JH",23.9932,85.3622,680,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-98072,"Darbhanga, BR",26.1542,85.8918,190,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-43324,"Asansol, WB",23.674,86.952,686,At Risk,Heavy Highway Traffic,15.1,46,15.87,"Jun 8, 03:52 AM",NH Alt Routing,5285,2026-06-07,Patna HQ DC
-DLV-32002,"Bhagalpur, BR",25.2425,87.0135,424,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-88554,"Cuttack, OD",20.4625,85.883,690,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,2026-06-07,Patna HQ DC
-DLV-69644,"Puri, OD",19.8134,85.8315,247,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,2026-06-07,Patna HQ DC
+DLV-10567,"Shillong, ML",25.5788,91.8933,415,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-89211,"Muzaffarpur, BR",26.1209,85.3647,263,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-62880,"Hazaribagh, JH",23.9932,85.3622,452,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-63501,"Bhubaneswar, OD",20.2961,85.8245,596,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-12707,"Ranchi, JH",23.3441,85.3096,642,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-45754,"Asansol, WB",23.674,86.952,617,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-91578,"Siliguri, WB",26.7271,88.3953,279,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-40534,"Gaya, BR",24.7914,85.0002,625,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-17233,"Jamshedpur, JH",22.8046,86.2029,263,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-31714,"Jamshedpur, JH",22.8046,86.2029,450,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-15275,"Kolkata, WB",22.5726,88.3639,228,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-18206,"Gaya, BR",24.7914,85.0002,395,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-30018,"Jamshedpur, JH",22.8046,86.2029,373,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-18234,"Patna, BR",25.5941,85.1376,459,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-86080,"Dhanbad, JH",23.7957,86.4304,167,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-46654,"Hazaribagh, JH",23.9932,85.3622,785,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-41096,"Siliguri, WB",26.7271,88.3953,504,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-25735,"Puri, OD",19.8134,85.8315,278,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-63338,"Darbhanga, BR",26.1542,85.8918,547,Delayed,Congested Highway / Toll Queue,10.4,88,11.87,"Jun 7, 11:52 PM",NH Alt Routing,8276,46180.22928,Patna HQ DC
+DLV-39198,"Shillong, ML",25.5788,91.8933,539,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-12648,"Muzaffarpur, BR",26.1209,85.3647,678,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-68550,"Bhubaneswar, OD",20.2961,85.8245,700,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-35251,"Bhubaneswar, OD",20.2961,85.8245,128,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-87900,"Shillong, ML",25.5788,91.8933,256,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-25678,"Dhanbad, JH",23.7957,86.4304,133,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-74216,"Gaya, BR",24.7914,85.0002,324,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-57520,"Siliguri, WB",26.7271,88.3953,639,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-33309,"Bhagalpur, BR",25.2425,87.0135,154,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-23847,"Jamshedpur, JH",22.8046,86.2029,451,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-32223,"Dhanbad, JH",23.7957,86.4304,323,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-98975,"Ranchi, JH",23.3441,85.3096,235,Delayed,Congested Highway / Toll Queue,14.5,93,16.05,"Jun 8, 04:03 AM",NH Alt Routing,4394,46180.22928,Patna HQ DC
+DLV-13807,"Siliguri, WB",26.7271,88.3953,668,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-65733,"Cuttack, OD",20.4625,85.883,613,At Risk,Heavy Highway Traffic,34,55,34.92,"Jun 8, 10:55 PM",NH Alt Routing,5717,46180.22928,Patna HQ DC
+DLV-14565,"Ranchi, JH",23.3441,85.3096,253,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-34708,"Shillong, ML",25.5788,91.8933,449,Delayed,Congested Highway / Toll Queue,38.5,67,39.62,"Jun 9, 03:37 AM",NH Alt Routing,5316,46180.22928,Patna HQ DC
+DLV-69056,"Jamshedpur, JH",22.8046,86.2029,506,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-99453,"Puri, OD",19.8134,85.8315,172,At Risk,Heavy Highway Traffic,35.6,41,36.28,"Jun 9, 12:17 AM",NH Alt Routing,1550,46180.22928,Patna HQ DC
+DLV-70600,"Kolkata, WB",22.5726,88.3639,164,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-52286,"Kharagpur, WB",22.3302,87.3237,734,Delayed,Congested Highway / Toll Queue,19.3,123,21.35,"Jun 8, 09:21 AM",NH Alt Routing,15018,46180.22928,Patna HQ DC
+DLV-37616,"Kharagpur, WB",22.3302,87.3237,107,Delayed,Congested Highway / Toll Queue,19.3,72,20.5,"Jun 8, 08:30 AM",NH Alt Routing,2020,46180.22928,Patna HQ DC
+DLV-35648,"Guwahati, AS",26.1445,91.7362,758,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-76443,"Jamshedpur, JH",22.8046,86.2029,444,At Risk,Heavy Highway Traffic,16.9,27,17.35,"Jun 8, 05:21 AM",NH Alt Routing,2122,46180.22928,Patna HQ DC
+DLV-74159,"Patna, BR",25.5941,85.1376,674,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-20268,"Cuttack, OD",20.4625,85.883,693,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-21220,"Bhagalpur, BR",25.2425,87.0135,251,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-21597,"Patna, BR",25.5941,85.1376,635,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-62139,"Cuttack, OD",20.4625,85.883,456,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-87026,"Puri, OD",19.8134,85.8315,712,Delayed,Congested Highway / Toll Queue,35.6,112,37.47,"Jun 9, 01:28 AM",NH Alt Routing,13306,46180.22928,Patna HQ DC
+DLV-49763,"Jamshedpur, JH",22.8046,86.2029,489,At Risk,Heavy Highway Traffic,16.9,26,17.33,"Jun 8, 05:20 AM",NH Alt Routing,2219,46180.22928,Patna HQ DC
+DLV-29252,"Patna, BR",25.5941,85.1376,294,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-37001,"Jamshedpur, JH",22.8046,86.2029,415,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-76218,"Gaya, BR",24.7914,85.0002,511,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-24865,"Hazaribagh, JH",23.9932,85.3622,355,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-37220,"Durgapur, WB",23.5204,87.3119,515,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-38173,"Kolkata, WB",22.5726,88.3639,792,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-82256,"Muzaffarpur, BR",26.1209,85.3647,142,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-68445,"Jamshedpur, JH",22.8046,86.2029,601,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-72375,"Bhagalpur, BR",25.2425,87.0135,176,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-49863,"Dhanbad, JH",23.7957,86.4304,359,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-53856,"Kolkata, WB",22.5726,88.3639,115,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-74945,"Darbhanga, BR",26.1542,85.8918,779,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-50982,"Puri, OD",19.8134,85.8315,362,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-86590,"Durgapur, WB",23.5204,87.3119,700,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-81918,"Jamshedpur, JH",22.8046,86.2029,341,At Risk,Heavy Highway Traffic,16.9,32,17.43,"Jun 8, 05:26 AM",NH Alt Routing,2021,46180.22928,Patna HQ DC
+DLV-65983,"Dhanbad, JH",23.7957,86.4304,661,At Risk,Heavy Highway Traffic,14.4,26,14.83,"Jun 8, 02:50 AM",NH Alt Routing,2890,46180.22928,Patna HQ DC
+DLV-78913,"Patna, BR",25.5941,85.1376,745,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-35121,"Durgapur, WB",23.5204,87.3119,527,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-86635,"Ranchi, JH",23.3441,85.3096,697,Delayed,Congested Highway / Toll Queue,14.5,110,16.33,"Jun 8, 04:20 AM",NH Alt Routing,12821,46180.22928,Patna HQ DC
+DLV-27541,"Bhagalpur, BR",25.2425,87.0135,736,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-23384,"Puri, OD",19.8134,85.8315,637,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-89036,"Asansol, WB",23.674,86.952,770,At Risk,Heavy Highway Traffic,15.1,44,15.83,"Jun 8, 03:50 AM",NH Alt Routing,5610,46180.22928,Patna HQ DC
+DLV-38772,"Kolkata, WB",22.5726,88.3639,730,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-11125,"Hazaribagh, JH",23.9932,85.3622,113,At Risk,Heavy Highway Traffic,12.6,50,13.43,"Jun 8, 01:26 AM",NH Alt Routing,1448,46180.22928,Patna HQ DC
+DLV-22352,"Ranchi, JH",23.3441,85.3096,798,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-12003,"Darbhanga, BR",26.1542,85.8918,526,Delayed,Congested Highway / Toll Queue,10.4,78,11.7,"Jun 7, 11:42 PM",NH Alt Routing,7090,46180.22928,Patna HQ DC
+DLV-73585,"Bhubaneswar, OD",20.2961,85.8245,659,At Risk,Heavy Highway Traffic,34.4,49,35.22,"Jun 8, 11:13 PM",NH Alt Routing,5432,46180.22928,Patna HQ DC
+DLV-93932,"Muzaffarpur, BR",26.1209,85.3647,535,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-19107,"Guwahati, AS",26.1445,91.7362,590,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-66390,"Darbhanga, BR",26.1542,85.8918,140,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-31322,"Kolkata, WB",22.5726,88.3639,318,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-33858,"Muzaffarpur, BR",26.1209,85.3647,669,Delayed,Congested Highway / Toll Queue,10,117,11.95,"Jun 7, 11:57 PM",NH Alt Routing,13145,46180.22928,Patna HQ DC
+DLV-33722,"Kharagpur, WB",22.3302,87.3237,258,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-93683,"Kolkata, WB",22.5726,88.3639,588,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-25849,"Bhubaneswar, OD",20.2961,85.8245,545,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-15472,"Cuttack, OD",20.4625,85.883,428,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-13129,"Patna, BR",25.5941,85.1376,620,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-72975,"Jamshedpur, JH",22.8046,86.2029,142,At Risk,Heavy Highway Traffic,16.9,50,17.73,"Jun 8, 05:44 AM",NH Alt Routing,1665,46180.22928,Patna HQ DC
+DLV-60744,"Darbhanga, BR",26.1542,85.8918,408,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-56166,"Muzaffarpur, BR",26.1209,85.3647,363,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-76809,"Dhanbad, JH",23.7957,86.4304,411,Delayed,Congested Highway / Toll Queue,14.4,73,15.62,"Jun 8, 03:37 AM",NH Alt Routing,5376,46180.22928,Patna HQ DC
+DLV-12992,"Kolkata, WB",22.5726,88.3639,433,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-19813,"Guwahati, AS",26.1445,91.7362,778,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-87787,"Bhubaneswar, OD",20.2961,85.8245,287,Delayed,Congested Highway / Toll Queue,34.4,109,36.22,"Jun 9, 12:13 AM",NH Alt Routing,6000,46180.22928,Patna HQ DC
+DLV-19715,"Kolkata, WB",22.5726,88.3639,586,At Risk,Heavy Highway Traffic,18.7,45,19.45,"Jun 8, 07:27 AM",NH Alt Routing,4496,46180.22928,Patna HQ DC
+DLV-99055,"Asansol, WB",23.674,86.952,550,At Risk,Heavy Highway Traffic,15.1,49,15.92,"Jun 8, 03:55 AM",NH Alt Routing,4631,46180.22928,Patna HQ DC
+DLV-54731,"Guwahati, AS",26.1445,91.7362,681,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-81268,"Jamshedpur, JH",22.8046,86.2029,554,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-16082,"Patna, BR",25.5941,85.1376,592,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-83102,"Kharagpur, WB",22.3302,87.3237,679,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-92815,"Gaya, BR",24.7914,85.0002,447,At Risk,Heavy Highway Traffic,10.5,33,11.05,"Jun 7, 11:03 PM",NH Alt Routing,2609,46180.22928,Patna HQ DC
+DLV-24445,"Shillong, ML",25.5788,91.8933,644,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-37727,"Ranchi, JH",23.3441,85.3096,416,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-30597,"Gaya, BR",24.7914,85.0002,727,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-93836,"Kolkata, WB",22.5726,88.3639,504,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-92860,"Guwahati, AS",26.1445,91.7362,742,At Risk,Heavy Highway Traffic,37.7,51,38.55,"Jun 9, 02:33 AM",NH Alt Routing,6288,46180.22928,Patna HQ DC
+DLV-41162,"Guwahati, AS",26.1445,91.7362,769,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-48659,"Ranchi, JH",23.3441,85.3096,138,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-49425,"Kharagpur, WB",22.3302,87.3237,633,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-68700,"Bhagalpur, BR",25.2425,87.0135,266,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-34617,"Puri, OD",19.8134,85.8315,388,Delayed,Congested Highway / Toll Queue,35.6,120,37.6,"Jun 9, 01:36 AM",NH Alt Routing,8424,46180.22928,Patna HQ DC
+DLV-56187,"Cuttack, OD",20.4625,85.883,195,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-41423,"Kolkata, WB",22.5726,88.3639,794,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-61491,"Jamshedpur, JH",22.8046,86.2029,545,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-88807,"Durgapur, WB",23.5204,87.3119,216,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-65015,"Asansol, WB",23.674,86.952,330,Delayed,Congested Highway / Toll Queue,15.1,87,16.55,"Jun 8, 04:33 AM",NH Alt Routing,5351,46180.22928,Patna HQ DC
+DLV-53414,"Ranchi, JH",23.3441,85.3096,734,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-29191,"Shillong, ML",25.5788,91.8933,366,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-92026,"Muzaffarpur, BR",26.1209,85.3647,591,At Risk,Heavy Highway Traffic,10,31,10.52,"Jun 7, 10:31 PM",NH Alt Routing,3120,46180.22928,Patna HQ DC
+DLV-42704,"Hazaribagh, JH",23.9932,85.3622,512,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-31903,"Dhanbad, JH",23.7957,86.4304,766,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-62042,"Patna, BR",25.5941,85.1376,797,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-13189,"Dhanbad, JH",23.7957,86.4304,696,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-68882,"Ranchi, JH",23.3441,85.3096,597,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-45561,"Guwahati, AS",26.1445,91.7362,703,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-28647,"Siliguri, WB",26.7271,88.3953,500,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-78023,"Bhubaneswar, OD",20.2961,85.8245,289,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-45188,"Patna, BR",25.5941,85.1376,273,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-92326,"Puri, OD",19.8134,85.8315,502,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-89815,"Asansol, WB",23.674,86.952,585,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-14384,"Kharagpur, WB",22.3302,87.3237,538,At Risk,Heavy Highway Traffic,19.3,24,19.7,"Jun 8, 07:42 AM",NH Alt Routing,2225,46180.22928,Patna HQ DC
+DLV-50656,"Bhubaneswar, OD",20.2961,85.8245,579,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-35612,"Bhagalpur, BR",25.2425,87.0135,588,At Risk,Heavy Highway Traffic,12.6,36,13.2,"Jun 8, 01:12 AM",NH Alt Routing,3607,46180.22928,Patna HQ DC
+DLV-95095,"Kharagpur, WB",22.3302,87.3237,768,At Risk,Heavy Highway Traffic,19.3,38,19.93,"Jun 8, 07:56 AM",NH Alt Routing,4834,46180.22928,Patna HQ DC
+DLV-60688,"Hazaribagh, JH",23.9932,85.3622,262,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-73058,"Asansol, WB",23.674,86.952,615,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-87886,"Kolkata, WB",22.5726,88.3639,378,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-95171,"Kharagpur, WB",22.3302,87.3237,137,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-32084,"Shillong, ML",25.5788,91.8933,312,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-99251,"Bhubaneswar, OD",20.2961,85.8245,241,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-71808,"Siliguri, WB",26.7271,88.3953,195,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-55766,"Shillong, ML",25.5788,91.8933,129,At Risk,Heavy Highway Traffic,38.5,28,38.97,"Jun 9, 02:58 AM",NH Alt Routing,878,46180.22928,Patna HQ DC
+DLV-91742,"Kharagpur, WB",22.3302,87.3237,475,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-78204,"Darbhanga, BR",26.1542,85.8918,157,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-90851,"Cuttack, OD",20.4625,85.883,392,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-62343,"Hazaribagh, JH",23.9932,85.3622,682,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-45743,"Hazaribagh, JH",23.9932,85.3622,709,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-10490,"Asansol, WB",23.674,86.952,216,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-65269,"Cuttack, OD",20.4625,85.883,574,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-54219,"Kolkata, WB",22.5726,88.3639,740,At Risk,Heavy Highway Traffic,18.7,41,19.38,"Jun 8, 07:23 AM",NH Alt Routing,5043,46180.22928,Patna HQ DC
+DLV-30167,"Kolkata, WB",22.5726,88.3639,736,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-97092,"Shillong, ML",25.5788,91.8933,744,At Risk,Heavy Highway Traffic,38.5,43,39.22,"Jun 9, 03:13 AM",NH Alt Routing,5315,46180.22928,Patna HQ DC
+DLV-10634,"Patna, BR",25.5941,85.1376,646,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-25000,"Kolkata, WB",22.5726,88.3639,256,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-75708,"Gaya, BR",24.7914,85.0002,461,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-85928,"Durgapur, WB",23.5204,87.3119,784,Delayed,Congested Highway / Toll Queue,15.9,79,17.22,"Jun 8, 05:13 AM",NH Alt Routing,10238,46180.22928,Patna HQ DC
+DLV-71226,"Bhagalpur, BR",25.2425,87.0135,727,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-99105,"Bhubaneswar, OD",20.2961,85.8245,761,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-84141,"Darbhanga, BR",26.1542,85.8918,716,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-31741,"Guwahati, AS",26.1445,91.7362,105,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-98049,"Jamshedpur, JH",22.8046,86.2029,150,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-56528,"Kharagpur, WB",22.3302,87.3237,327,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-26232,"Kharagpur, WB",22.3302,87.3237,340,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-85947,"Dhanbad, JH",23.7957,86.4304,527,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-72702,"Puri, OD",19.8134,85.8315,751,Delayed,Congested Highway / Toll Queue,35.6,100,37.27,"Jun 9, 01:16 AM",NH Alt Routing,12465,46180.22928,Patna HQ DC
+DLV-29964,"Muzaffarpur, BR",26.1209,85.3647,633,Delayed,Congested Highway / Toll Queue,10,90,11.5,"Jun 7, 11:30 PM",NH Alt Routing,9626,46180.22928,Patna HQ DC
+DLV-57051,"Asansol, WB",23.674,86.952,677,Delayed,Congested Highway / Toll Queue,15.1,110,16.93,"Jun 8, 04:56 AM",NH Alt Routing,12491,46180.22928,Patna HQ DC
+DLV-75422,"Guwahati, AS",26.1445,91.7362,671,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-66711,"Siliguri, WB",26.7271,88.3953,130,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-99106,"Hazaribagh, JH",23.9932,85.3622,477,Delayed,Congested Highway / Toll Queue,12.6,92,14.13,"Jun 8, 02:08 AM",NH Alt Routing,7687,46180.22928,Patna HQ DC
+DLV-27344,"Ranchi, JH",23.3441,85.3096,568,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-34101,"Muzaffarpur, BR",26.1209,85.3647,427,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-65462,"Kolkata, WB",22.5726,88.3639,201,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-92107,"Guwahati, AS",26.1445,91.7362,270,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-43891,"Muzaffarpur, BR",26.1209,85.3647,739,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-79023,"Jamshedpur, JH",22.8046,86.2029,300,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-83464,"Kharagpur, WB",22.3302,87.3237,172,At Risk,Heavy Highway Traffic,19.3,39,19.95,"Jun 8, 07:57 AM",NH Alt Routing,1474,46180.22928,Patna HQ DC
+DLV-58682,"Patna, BR",25.5941,85.1376,747,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-47514,"Darbhanga, BR",26.1542,85.8918,522,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-85576,"Gaya, BR",24.7914,85.0002,475,At Risk,Heavy Highway Traffic,10.5,32,11.03,"Jun 7, 11:02 PM",NH Alt Routing,2664,46180.22928,Patna HQ DC
+DLV-29466,"Siliguri, WB",26.7271,88.3953,610,In Transit,Clear & Optimal,17.6,0,17.6,"Jun 8, 05:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-90111,"Kolkata, WB",22.5726,88.3639,557,In Transit,Clear & Optimal,18.7,0,18.7,"Jun 8, 06:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-80409,"Gaya, BR",24.7914,85.0002,646,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-96761,"Bhagalpur, BR",25.2425,87.0135,711,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-85667,"Shillong, ML",25.5788,91.8933,456,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-33818,"Bhubaneswar, OD",20.2961,85.8245,581,Delayed,Congested Highway / Toll Queue,34.4,120,36.4,"Jun 9, 12:24 AM",NH Alt Routing,11898,46180.22928,Patna HQ DC
+DLV-22801,"Ranchi, JH",23.3441,85.3096,198,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-86469,"Bhagalpur, BR",25.2425,87.0135,648,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-92212,"Kharagpur, WB",22.3302,87.3237,733,Delayed,Congested Highway / Toll Queue,19.3,96,20.9,"Jun 8, 08:54 AM",NH Alt Routing,11707,46180.22928,Patna HQ DC
+DLV-10654,"Hazaribagh, JH",23.9932,85.3622,307,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-66059,"Ranchi, JH",23.3441,85.3096,366,In Transit,Clear & Optimal,14.5,0,14.5,"Jun 8, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-90166,"Jamshedpur, JH",22.8046,86.2029,295,In Transit,Clear & Optimal,16.9,0,16.9,"Jun 8, 04:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-41324,"Cuttack, OD",20.4625,85.883,620,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-90336,"Kolkata, WB",22.5726,88.3639,239,At Risk,Heavy Highway Traffic,18.7,27,19.15,"Jun 8, 07:09 AM",NH Alt Routing,1292,46180.22928,Patna HQ DC
+DLV-25593,"Cuttack, OD",20.4625,85.883,711,At Risk,Heavy Highway Traffic,34,36,34.6,"Jun 8, 10:36 PM",NH Alt Routing,4271,46180.22928,Patna HQ DC
+DLV-67772,"Patna, BR",25.5941,85.1376,534,Delivered,Completed,0,0,0,Completed,Standard Routing,0,46180.22928,Patna HQ DC
+DLV-89979,"Asansol, WB",23.674,86.952,428,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-45081,"Bhubaneswar, OD",20.2961,85.8245,123,At Risk,Heavy Highway Traffic,34.4,30,34.9,"Jun 8, 10:54 PM",NH Alt Routing,914,46180.22928,Patna HQ DC
+DLV-54517,"Puri, OD",19.8134,85.8315,239,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-29962,"Puri, OD",19.8134,85.8315,381,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-26203,"Gaya, BR",24.7914,85.0002,474,In Transit,Clear & Optimal,10.5,0,10.5,"Jun 7, 10:30 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-84652,"Asansol, WB",23.674,86.952,573,In Transit,Clear & Optimal,15.1,0,15.1,"Jun 8, 03:06 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-17234,"Kharagpur, WB",22.3302,87.3237,736,In Transit,Clear & Optimal,19.3,0,19.3,"Jun 8, 07:18 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-46548,"Darbhanga, BR",26.1542,85.8918,454,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-63560,"Guwahati, AS",26.1445,91.7362,298,In Transit,Clear & Optimal,37.7,0,37.7,"Jun 9, 01:42 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-83164,"Cuttack, OD",20.4625,85.883,486,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-72306,"Muzaffarpur, BR",26.1209,85.3647,543,In Transit,Clear & Optimal,10,0,10,"Jun 7, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-19089,"Cuttack, OD",20.4625,85.883,492,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-34688,"Dhanbad, JH",23.7957,86.4304,607,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-97418,"Durgapur, WB",23.5204,87.3119,579,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-58758,"Durgapur, WB",23.5204,87.3119,427,In Transit,Clear & Optimal,15.9,0,15.9,"Jun 8, 03:54 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-87152,"Guwahati, AS",26.1445,91.7362,728,At Risk,Heavy Highway Traffic,37.7,46,38.47,"Jun 9, 02:28 AM",NH Alt Routing,5575,46180.22928,Patna HQ DC
+DLV-90890,"Bhubaneswar, OD",20.2961,85.8245,700,In Transit,Clear & Optimal,34.4,0,34.4,"Jun 8, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-87241,"Dhanbad, JH",23.7957,86.4304,311,In Transit,Clear & Optimal,14.4,0,14.4,"Jun 8, 02:24 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-31854,"Shillong, ML",25.5788,91.8933,513,In Transit,Clear & Optimal,38.5,0,38.5,"Jun 9, 02:30 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-21135,"Hazaribagh, JH",23.9932,85.3622,680,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-98072,"Darbhanga, BR",26.1542,85.8918,190,In Transit,Clear & Optimal,10.4,0,10.4,"Jun 7, 10:24 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-43324,"Asansol, WB",23.674,86.952,686,At Risk,Heavy Highway Traffic,15.1,46,15.87,"Jun 8, 03:52 AM",NH Alt Routing,5285,46180.22928,Patna HQ DC
+DLV-32002,"Bhagalpur, BR",25.2425,87.0135,424,In Transit,Clear & Optimal,12.6,0,12.6,"Jun 8, 12:36 AM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-88554,"Cuttack, OD",20.4625,85.883,690,In Transit,Clear & Optimal,34,0,34,"Jun 8, 10:00 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-69644,"Puri, OD",19.8134,85.8315,247,In Transit,Clear & Optimal,35.6,0,35.6,"Jun 8, 11:36 PM",Standard Routing,0,46180.22928,Patna HQ DC
+DLV-18787,"Kashipur, UK",29.2104,78.9618,500,In Transit,Peak Hour Congestion (+12m),36.1,12,36.3,"Jun 9, 12:18 AM",Alternative Route B,1044,2026-06-07,Kolkata Sub DC

@@ -4434,7 +4434,7 @@ const XLSX = window.XLSX;
                             }
                         }, 200);
                     }
-                } else if (activeTab === "weather") {
+                } else {
                     if (mapRef.current) {
                         mapRef.current.remove();
                         mapRef.current = null;
@@ -4442,6 +4442,15 @@ const XLSX = window.XLSX;
                         thermalLayerRef.current = null;
                     }
                 }
+
+                return () => {
+                    if (mapRef.current) {
+                        mapRef.current.remove();
+                        mapRef.current = null;
+                        mapLayersRef.current = null;
+                        thermalLayerRef.current = null;
+                    }
+                };
             }, [activeTab, loading]);
 
             // Plot markers and routes when routeNetwork changes
