@@ -4618,11 +4618,11 @@ const XLSX = window.XLSX;
             if (loading) {
                 return (
                     <div className="h-screen w-screen flex flex-col items-center justify-center preloader-container text-slate-200">
-                        <div className="flex flex-col items-center bg-[#131c2e]/40 border border-[#1e293b]/60 p-10 rounded-2xl backdrop-blur-lg shadow-2xl relative w-[420px] max-w-full">
+                        <div className="flex flex-col items-center preloader-card p-10 rounded-2xl backdrop-blur-lg shadow-2xl relative w-[420px] max-w-full">
                             {/* Animated Sorting & Delivery Logistics Flow */}
                             <div className="preloader-logistics-flow">
                                 <div className="logistics-station sorting-station">
-                                    <i className="fa-solid fa-boxes-packing text-brandBlue text-xl"></i>
+                                    <i className="fa-solid fa-boxes-packing preloader-icon-blue text-xl"></i>
                                     <div className="sorting-laser-line"></div>
                                 </div>
                                 
@@ -4644,15 +4644,15 @@ const XLSX = window.XLSX;
                             
                             <div className="text-center font-sans mt-4">
                                 <h2 className="text-base font-extrabold tracking-widest text-white flex items-center justify-center gap-2">
-                                    <span className="w-2.5 h-2.5 bg-brandBlue rounded-full animate-pulse"></span>
+                                    <span className="w-2.5 h-2.5 preloader-progress-bar rounded-full animate-pulse"></span>
                                     MISSION CONTROL
                                 </h2>
                                 <p className="text-[10px] text-slate-400 font-semibold tracking-wider mt-1">SUPPLY CHAIN MONITOR</p>
                                 <div className="mt-6 flex flex-col items-center gap-2">
                                     <div className="w-48 h-1 bg-slate-900 rounded-full overflow-hidden border border-borderSlate">
-                                        <div className="h-full bg-brandBlue rounded-full animate-pulse" style={{ width: '60%' }}></div>
+                                        <div className="h-full preloader-progress-bar rounded-full animate-pulse" style={{ width: '60%' }}></div>
                                     </div>
-                                    <p className="text-[9px] text-brandBlue font-mono uppercase tracking-widest mt-1 animate-pulse">{loadingStage}</p>
+                                    <p className="text-[9px] preloader-stage-text font-mono uppercase tracking-widest mt-1 animate-pulse">{loadingStage}</p>
                                 </div>
                             </div>
                         </div>

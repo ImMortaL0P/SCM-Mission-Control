@@ -76,6 +76,31 @@ body {
     color: var(--textPrimary) !important;
 }
 
+/* Light mode specific status and highlight colors */
+[data-theme="light"] .text-statusGreen {
+    color: #059669 !important;
+}
+
+[data-theme="light"] .text-statusOrange {
+    color: #d97706 !important;
+}
+
+[data-theme="light"] .text-statusRed {
+    color: #dc2626 !important;
+}
+
+[data-theme="light"] .text-statusPurple {
+    color: #7c3aed !important;
+}
+
+[data-theme="light"] .text-amber-400 {
+    color: #d97706 !important;
+}
+
+[data-theme="light"] .text-amber-500 {
+    color: #b45309 !important;
+}
+
 /* Ensure text stays white in buttons/badges/alerts */
 [data-theme="light"] .bg-brandBlue .text-white,
 [data-theme="light"] .bg-statusRed .text-white,
@@ -127,14 +152,69 @@ body {
 /* Card & panel overrides */
 [data-theme="light"] .bg-slate-900,
 [data-theme="light"] .bg-slate-900\/60,
+[data-theme="light"] .bg-slate-955\/95,
 [data-theme="light"] .bg-slate-950\/95 {
     background-color: #f1f5f9 !important;
     color: var(--textPrimary) !important;
     border-color: #cbd5e1 !important;
 }
 
+/* Sub-card dark backgrounds overrides (e.g. alt-route containers) */
+[data-theme="light"] .bg-slate-950 {
+    background-color: #e2e8f0 !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* Risk badges overrides to make them pastel in light mode */
+[data-theme="light"] .bg-red-955\/40,
+[data-theme="light"] .bg-red-950\/40 {
+    background-color: rgba(239, 68, 68, 0.12) !important;
+}
+
+[data-theme="light"] .bg-orange-955\/40,
+[data-theme="light"] .bg-orange-950\/40 {
+    background-color: rgba(249, 115, 22, 0.12) !important;
+}
+
+[data-theme="light"] .bg-amber-955\/40,
+[data-theme="light"] .bg-amber-950\/40 {
+    background-color: rgba(245, 158, 11, 0.12) !important;
+}
+
+[data-theme="light"] .bg-emerald-955\/40,
+[data-theme="light"] .bg-emerald-950\/40 {
+    background-color: rgba(16, 185, 129, 0.12) !important;
+}
+
+[data-theme="light"] .bg-blue-955\/40,
+[data-theme="light"] .bg-blue-950\/40 {
+    background-color: rgba(37, 99, 235, 0.12) !important;
+}
+
+/* Adjust opacity of disabled items in light mode for better contrast */
+[data-theme="light"] .opacity-50 {
+    opacity: 0.7 !important;
+}
+
+[data-theme="light"] .cursor-not-allowed {
+    opacity: 0.7 !important;
+    color: #475569 !important;
+}
+
 [data-theme="light"] .bg-panelBg {
     background-color: var(--panelBg) !important;
+}
+
+[data-theme="light"] .bg-panelBg\/80 {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+[data-theme="light"] .bg-panelBg\/90 {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-theme="light"] .bg-panelBg\/95 {
+    background-color: rgba(255, 255, 255, 0.95) !important;
 }
 
 [data-theme="light"] .bg-darkBg {
@@ -159,11 +239,61 @@ body {
     filter: none !important;
 }
 
-/* Supply Chain Preloader Animation */
 .preloader-container {
     background: radial-gradient(circle at center, #0f1c3f 0%, #070b13 100%);
     overflow: hidden;
+    transition: background 0.3s ease;
 }
+
+[data-theme="light"] .preloader-container {
+    background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+}
+
+.preloader-card {
+    background: rgba(19, 28, 46, 0.4);
+    border: 1px solid rgba(30, 41, 59, 0.6);
+}
+
+[data-theme="light"] .preloader-card {
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.preloader-stage-text {
+    color: #3b82f6;
+}
+
+[data-theme="light"] .preloader-stage-text {
+    color: #2563eb;
+}
+
+.preloader-icon-blue {
+    color: #3b82f6;
+}
+
+[data-theme="light"] .preloader-icon-blue {
+    color: #2563eb;
+}
+
+.preloader-progress-bar {
+    background-color: #3b82f6;
+}
+
+[data-theme="light"] .preloader-progress-bar {
+    background-color: #2563eb;
+}
+
+[data-theme="light"] .logistics-station {
+    background: rgba(226, 232, 240, 0.5);
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+[data-theme="light"] .route-dot-path {
+    background: repeating-linear-gradient(90deg, #cbd5e1, #cbd5e1 4px, transparent 4px, transparent 10px);
+}
+
 
 .preloader-logistics-flow {
     position: relative;
