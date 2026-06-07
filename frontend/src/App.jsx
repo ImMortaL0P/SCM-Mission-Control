@@ -1124,6 +1124,21 @@ const XLSX = window.XLSX;
             const [activeRoute, setActiveRoute] = useState(order.AltPath || "Standard Routing");
             const [updating, setUpdating] = useState(false);
 
+            // Escape key listener to close modal
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (e.key === "Escape") onClose();
+                };
+                window.addEventListener("keydown", handleKeyDown);
+                return () => window.removeEventListener("keydown", handleKeyDown);
+            }, [onClose]);
+
+            const handleBackdropClick = (e) => {
+                if (e.target === e.currentTarget) {
+                    onClose();
+                }
+            };
+
             useEffect(() => {
                 if (!mapContainerRef.current) return;
 
@@ -1213,7 +1228,10 @@ const XLSX = window.XLSX;
             };
 
             return (
-                <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
+                <div 
+                    onClick={handleBackdropClick}
+                    className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+                >
                     <div className="bg-panelBg border border-borderSlate w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row h-[90vh] md:h-auto max-h-[90vh]">
                         <div className="flex-1 min-h-[300px] md:min-h-0 relative bg-slate-950">
                             <div ref={mapContainerRef} className="w-full h-full"></div>
@@ -1233,20 +1251,29 @@ const XLSX = window.XLSX;
 
                         <div className="w-full md:w-96 p-6 flex flex-col justify-between overflow-y-auto border-t md:border-t-0 md:border-l border-borderSlate text-slate-300">
                             <div>
-                                <div className="flex justify-between items-start border-b border-borderSlate pb-4 mb-4">
+                                <div className="flex justify-between items-start border-b border-borderSlate pb-4 mb-4 relative">
                                     <div>
                                         <h3 className="text-sm font-black text-white font-mono">{order.OrderID}</h3>
                                         <p className="text-[10px] text-slate-400 mt-1">Ordered on: {order.OrderDate}</p>
                                     </div>
-                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
-                                        order.Status === "Delayed" 
-                                            ? "bg-red-955/40 text-statusRed border-statusRed/30" 
-                                            : order.Status === "At Risk" 
-                                                ? "bg-orange-955/40 text-statusOrange border-statusOrange/20" 
-                                                : order.Status === "Delivered"
-                                                    ? "bg-emerald-955/40 text-statusGreen border-statusGreen/20"
-                                                    : "bg-blue-955/40 text-brandBlue border-brandBlue/20"
-                                    }`}>{order.Status}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                                            order.Status === "Delayed" 
+                                                ? "bg-red-955/40 text-statusRed border-statusRed/30" 
+                                                : order.Status === "At Risk" 
+                                                    ? "bg-orange-955/40 text-statusOrange border-statusOrange/20" 
+                                                    : order.Status === "Delivered"
+                                                        ? "bg-emerald-955/40 text-statusGreen border-statusGreen/20"
+                                                        : "bg-blue-955/40 text-brandBlue border-brandBlue/20"
+                                        }`}>{order.Status}</span>
+                                        <button 
+                                            onClick={onClose} 
+                                            className="text-slate-400 hover:text-white transition ml-2 cursor-pointer p-1"
+                                            title="Close details"
+                                        >
+                                            <i className="fa-solid fa-xmark text-sm"></i>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="space-y-4 text-xs">
