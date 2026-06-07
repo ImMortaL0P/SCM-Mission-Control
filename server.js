@@ -62,7 +62,8 @@ function loadApiKeys() {
         weatherapi: "",
         tomtom: "",
         visualcrossing: "",
-        waqi: ""
+        waqi: "",
+        windy: "LAZlrX699xGNQwLZdPQATmjzYObS1AS5"
     };
 }
 
@@ -378,6 +379,79 @@ app.post('/api/orders/update-route', (req, res) => {
         res.json({ success: true });
     } catch (e) {
         console.error("Error updating order route:", e);
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// POST Bulk Update Routes for a Lane (Warehouse -> Hub)
+app.post('/api/routes/update-lane', (req, res) => {
+    try {
+        const { SourceWarehouse, RouteHub, AltPath } = req.body;
+        if (!SourceWarehouse || !RouteHub || AltPath === undefined) {
+            return res.status(400).json({ error: "Missing SourceWarehouse, RouteHub, or AltPath" });
+        }
+        const orders = loadOrdersFromCSV();
+        let updatedCount = 0;
+        orders.forEach(o => {
+            const currentSource = o.SourceWarehouse || "Patna HQ DC";
+            if (currentSource === SourceWarehouse && o.RouteHub === RouteHub) {
+                o.AltPath = AltPath;
+                updatedCount++;
+            }
+        });
+        if (updatedCount > 0) {
+            saveOrdersToCSV(orders);
+            console.log(`Successfully updated route to "${AltPath}" for ${updatedCount} orders on lane ${SourceWarehouse} -> ${RouteHub}`);
+        }
+        res.json({ success: true, updatedCount });
+    } catch (e) {
+        console.error("Error updating lane routes:", e);
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// GET Route Snapping Proxy with Caching
+const routeCacheFile = path.join(__dirname, 'route_cache.json');
+let routeCache = {};
+if (fs.existsSync(routeCacheFile)) {
+    try {
+        routeCache = JSON.parse(fs.readFileSync(routeCacheFile, 'utf8'));
+    } catch (e) {
+        console.error("Failed to parse route cache:", e);
+    }
+}
+
+app.get('/api/route-snapping', async (req, res) => {
+    try {
+        const { coords } = req.query;
+        if (!coords) {
+            return res.status(400).json({ error: "Missing coords query parameter" });
+        }
+
+        // Generate cache key using all query params
+        const queryParams = new URLSearchParams(req.query);
+        queryParams.delete('coords');
+        const cacheKey = `${coords}?${queryParams.toString()}`;
+
+        // Check cache
+        if (routeCache[cacheKey]) {
+            return res.json(routeCache[cacheKey]);
+        }
+
+        const url = `https://router.project-osrm.org/route/v1/driving/${coords}?${queryParams.toString()}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`OSRM API responded with status ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Cache the response
+        routeCache[cacheKey] = data;
+        fs.writeFileSync(routeCacheFile, JSON.stringify(routeCache, null, 2));
+
+        res.json(data);
+    } catch (e) {
+        console.error("Route snapping proxy failed:", e);
         res.status(500).json({ error: e.message });
     }
 });

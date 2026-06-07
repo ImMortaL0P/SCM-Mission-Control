@@ -113,7 +113,12 @@ const XLSX = window.XLSX;
                             <i className="fa-solid fa-cloud-bolt text-sm"></i> Weather
                         </div>
                         <div className="flex items-center gap-3 px-3 py-2.5 hover:bg-slate-800/50 hover:text-white rounded-lg cursor-pointer transition opacity-50 cursor-not-allowed" onClick={() => alert("Under Development. Please use Overview or Weather.")}><i className="fa-solid fa-newspaper text-sm"></i> News & Disruptions</div>
-                        <div className="flex items-center gap-3 px-3 py-2.5 hover:bg-slate-800/50 hover:text-white rounded-lg cursor-pointer transition opacity-50 cursor-not-allowed" onClick={() => alert("Under Development. Please use Overview or Weather.")}><i className="fa-solid fa-route text-sm"></i> Routes & Optimization</div>
+                        <div 
+                            onClick={() => setActiveTab("routes")}
+                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition ${activeTab === "routes" ? "bg-brandBlue/10 text-brandBlue font-bold" : "hover:bg-slate-800/50 hover:text-white"}`}
+                        >
+                            <i className="fa-solid fa-route text-sm"></i> Routes & Optimization
+                        </div>
                     </nav>
                 </div>
                 
@@ -1165,7 +1170,7 @@ const XLSX = window.XLSX;
                 const bounds = L.latLngBounds([origin.lat, origin.lon], [dest.lat, dest.lon]);
                 map.fitBounds(bounds, { padding: [50, 50] });
 
-                fetch(`https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${dest.lon},${dest.lat}?overview=full&geometries=geojson&alternatives=true`)
+                fetch(`/api/route-snapping?coords=${origin.lon},${origin.lat};${dest.lon},${dest.lat}&overview=full&geometries=geojson&alternatives=true`)
                     .then(r => r.json())
                     .then(data => {
                         if (data.routes && data.routes.length > 0) {
@@ -2343,6 +2348,1150 @@ const XLSX = window.XLSX;
             );
         };
 
+        // ==========================================
+        // --- ROUTES & OPTIMIZATION TAB HELPERS ---
+        // ==========================================
+
+        const buildPathfindingGraph = (warehouses, hubsCoords) => {
+            const nodes = {}; // name -> { lat, lon }
+            
+            // Add all hubs
+            Object.keys(hubsCoords).forEach(hub => {
+                nodes[hub] = { 
+                    name: hub, 
+                    lat: hubsCoords[hub].lat, 
+                    lon: hubsCoords[hub].lon,
+                    isWarehouse: false
+                };
+            });
+            
+            // Add all warehouses
+            Object.keys(warehouses).forEach(wName => {
+                nodes[wName] = { 
+                    name: wName, 
+                    lat: warehouses[wName].lat, 
+                    lon: warehouses[wName].lon,
+                    isWarehouse: true
+                };
+            });
+
+            const getFullHubName = (cleanName) => {
+                const keys = Object.keys(hubsCoords);
+                const found = keys.find(k => k.toLowerCase().startsWith(cleanName.toLowerCase()));
+                return found || cleanName;
+            };
+
+            // Base hubs that are connected
+            const baseHubNames = [
+                "Kolkata", "Ranchi", "Bhubaneswar", "Siliguri", "Guwahati", "Jamshedpur", 
+                "Patna", "Gaya", "Muzaffarpur", "Bhagalpur", "Dhanbad", "Cuttack", 
+                "Asansol", "Durgapur", "Darbhanga", "Hazaribagh", "Kharagpur", "Shillong", "Puri"
+            ];
+            
+            const baseHubsFull = baseHubNames.map(name => getFullHubName(name)).filter(name => nodes[name]);
+
+            const baseEdges = [
+                ["Patna", "Asansol"],
+                ["Asansol", "Durgapur"],
+                ["Durgapur", "Kolkata"],
+                ["Patna", "Gaya"],
+                ["Gaya", "Hazaribagh"],
+                ["Hazaribagh", "Ranchi"],
+                ["Patna", "Kharagpur"],
+                ["Kharagpur", "Cuttack"],
+                ["Cuttack", "Bhubaneswar"],
+                ["Patna", "Bhagalpur"],
+                ["Bhagalpur", "Siliguri"],
+                ["Siliguri", "Guwahati"],
+                ["Hazaribagh", "Jamshedpur"],
+                ["Patna", "Muzaffarpur"],
+                ["Gaya", "Dhanbad"],
+                ["Gaya", "Asansol"],
+                ["Muzaffarpur", "Darbhanga"],
+                ["Asansol", "Kharagpur"],
+                ["Guwahati", "Shillong"],
+                ["Bhubaneswar", "Puri"]
+            ];
+
+            // Initialize adjacency list
+            const adj = {};
+            Object.keys(nodes).forEach(n => {
+                adj[n] = [];
+            });
+
+            const addEdge = (u, v) => {
+                if (!nodes[u] || !nodes[v]) return;
+                const dist = haversineDistance(nodes[u].lat, nodes[u].lon, nodes[v].lat, nodes[v].lon);
+                // Avoid duplicate edges
+                if (!adj[u].some(edge => edge.node === v)) {
+                    adj[u].push({ node: v, weight: dist });
+                }
+                if (!adj[v].some(edge => edge.node === u)) {
+                    adj[v].push({ node: u, weight: dist });
+                }
+            };
+
+            // Add base edges
+            baseEdges.forEach(([c1, c2]) => {
+                const u = getFullHubName(c1);
+                const v = getFullHubName(c2);
+                addEdge(u, v);
+            });
+
+            // Connect any node that is not in the base 19 hubs to its nearest base hub
+            Object.keys(nodes).forEach(nodeName => {
+                const isBaseHub = baseHubsFull.includes(nodeName);
+                if (!isBaseHub) {
+                    // Find closest base hub
+                    let minNode = null;
+                    let minDist = Infinity;
+                    baseHubsFull.forEach(bh => {
+                        const dist = haversineDistance(nodes[nodeName].lat, nodes[nodeName].lon, nodes[bh].lat, nodes[bh].lon);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            minNode = bh;
+                        }
+                    });
+                    if (minNode) {
+                        addEdge(nodeName, minNode);
+                    }
+                }
+            });
+
+            return { nodes, adj };
+        };
+
+        const findShortestPathAStar = (start, end, graph) => {
+            const { nodes, adj } = graph;
+            if (!nodes[start] || !nodes[end]) return null;
+
+            const openSet = [start];
+            const cameFrom = {};
+
+            const gScore = {};
+            const fScore = {};
+
+            Object.keys(nodes).forEach(n => {
+                gScore[n] = Infinity;
+                fScore[n] = Infinity;
+            });
+
+            gScore[start] = 0;
+            fScore[start] = haversineDistance(nodes[start].lat, nodes[start].lon, nodes[end].lat, nodes[end].lon);
+
+            while (openSet.length > 0) {
+                let current = openSet[0];
+                let lowestF = fScore[current];
+                let lowestIdx = 0;
+                for (let i = 1; i < openSet.length; i++) {
+                    const n = openSet[i];
+                    if (fScore[n] < lowestF) {
+                        lowestF = fScore[n];
+                        current = n;
+                        lowestIdx = i;
+                    }
+                }
+
+                if (current === end) {
+                    const path = [current];
+                    while (cameFrom[current]) {
+                        current = cameFrom[current];
+                        path.unshift(current);
+                    }
+                    return {
+                        path,
+                        distance: gScore[end]
+                    };
+                }
+
+                openSet.splice(lowestIdx, 1);
+
+                const neighbors = adj[current] || [];
+                for (let i = 0; i < neighbors.length; i++) {
+                    const neighborEdge = neighbors[i];
+                    const neighbor = neighborEdge.node;
+                    const weight = neighborEdge.weight;
+
+                    const tentativeGScore = gScore[current] + weight;
+                    if (tentativeGScore < gScore[neighbor]) {
+                        cameFrom[neighbor] = current;
+                        gScore[neighbor] = tentativeGScore;
+                        fScore[neighbor] = tentativeGScore + haversineDistance(nodes[neighbor].lat, nodes[neighbor].lon, nodes[end].lat, nodes[end].lon);
+                        if (!openSet.includes(neighbor)) {
+                            openSet.push(neighbor);
+                        }
+                    }
+                }
+            }
+
+            return null; // No path found
+        };
+
+        const findAllSimplePaths = (start, end, graph, maxPaths = 5, maxHops = 6) => {
+            const { nodes, adj } = graph;
+            if (!nodes[start] || !nodes[end]) return [];
+            
+            const paths = [];
+            
+            const dfs = (curr, end, visited, path, dist) => {
+                if (paths.length >= maxPaths) return;
+                if (path.length > maxHops) return;
+                
+                if (curr === end) {
+                    paths.push({ path: [...path], distance: dist });
+                    return;
+                }
+                
+                const neighbors = adj[curr] || [];
+                const sortedNeighbors = [...neighbors].sort((a, b) => {
+                    const distA = haversineDistance(nodes[a.node].lat, nodes[a.node].lon, nodes[end].lat, nodes[end].lon);
+                    const distB = haversineDistance(nodes[b.node].lat, nodes[b.node].lon, nodes[end].lat, nodes[end].lon);
+                    return distA - distB;
+                });
+
+                for (let i = 0; i < sortedNeighbors.length; i++) {
+                    const { node: neighbor, weight } = sortedNeighbors[i];
+                    if (!visited.has(neighbor)) {
+                        visited.add(neighbor);
+                        path.push(neighbor);
+                        dfs(neighbor, end, visited, path, dist + weight);
+                        path.pop();
+                        visited.delete(neighbor);
+                    }
+                }
+            };
+            
+            const visited = new Set([start]);
+            dfs(start, end, visited, [start], 0);
+            
+            return paths.sort((a, b) => a.distance - b.distance);
+        };
+
+        const getDefaultPathForLane = (warehouseName, hubName, hubsCoords) => {
+            const cleanHubName = hubName.split(",")[0].trim();
+            const transitMapping = {
+                "Kolkata": ["Patna", "Asansol", "Durgapur", "Kolkata"],
+                "Ranchi": ["Patna", "Gaya", "Hazaribagh", "Ranchi"],
+                "Bhubaneswar": ["Patna", "Kharagpur", "Cuttack", "Bhubaneswar"],
+                "Siliguri": ["Patna", "Bhagalpur", "Siliguri"],
+                "Guwahati": ["Patna", "Siliguri", "Guwahati"],
+                "Jamshedpur": ["Patna", "Gaya", "Hazaribagh", "Jamshedpur"],
+                "Gaya": ["Patna", "Gaya"],
+                "Muzaffarpur": ["Patna", "Muzaffarpur"],
+                "Bhagalpur": ["Patna", "Bhagalpur"],
+                "Dhanbad": ["Patna", "Gaya", "Dhanbad"],
+                "Cuttack": ["Patna", "Kharagpur", "Cuttack"],
+                "Asansol": ["Patna", "Gaya", "Asansol"],
+                "Durgapur": ["Patna", "Asansol", "Durgapur"],
+                "Darbhanga": ["Patna", "Muzaffarpur", "Darbhanga"],
+                "Hazaribagh": ["Patna", "Gaya", "Hazaribagh"],
+                "Kharagpur": ["Patna", "Asansol", "Kharagpur"],
+                "Shillong": ["Patna", "Siliguri", "Guwahati", "Shillong"],
+                "Puri": ["Patna", "Kharagpur", "Cuttack", "Bhubaneswar", "Puri"],
+                "Patna": ["Patna"]
+            };
+            
+            const cleanPath = transitMapping[cleanHubName] || ["Patna", cleanHubName];
+            
+            const getFullHubName = (cleanName) => {
+                const keys = Object.keys(hubsCoords);
+                const found = keys.find(k => k.toLowerCase().startsWith(cleanName.toLowerCase()));
+                return found || cleanName;
+            };
+
+            return cleanPath.map((city, idx) => {
+                if (idx === 0) {
+                    return warehouseName;
+                }
+                return getFullHubName(city);
+            });
+        };
+
+        const RoutesOptimizationView = ({ orders, warehouses, hubsCoords, onUpdateLaneRoute, theme }) => {
+            const [selectedWarehouse, setSelectedWarehouse] = useState("");
+            const [selectedHub, setSelectedHub] = useState("");
+            const [searchQuery, setSearchQuery] = useState("");
+            const [statusFilter, setStatusFilter] = useState("all");
+            const [warehouseFilter, setWarehouseFilter] = useState("all");
+            const [sortBy, setSortBy] = useState("savings_desc");
+            const [viewMode, setViewMode] = useState("matrix");
+            const [applying, setApplying] = useState(false);
+            const [successMessage, setSuccessMessage] = useState(null);
+
+            const [optimalRoadCoords, setOptimalRoadCoords] = useState([]);
+            const [currentRoadCoords, setCurrentRoadCoords] = useState([]);
+            const [loadingRoads, setLoadingRoads] = useState(false);
+
+            const mapContainerRef = useRef(null);
+            const viewMapRef = useRef(null);
+
+            const graph = React.useMemo(() => buildPathfindingGraph(warehouses, hubsCoords), [warehouses, hubsCoords]);
+
+            const computedLanes = React.useMemo(() => {
+                const results = [];
+                Object.keys(warehouses).forEach(wName => {
+                    Object.keys(hubsCoords).forEach(hubName => {
+                        const astarResult = findShortestPathAStar(wName, hubName, graph);
+                        const defaultPath = getDefaultPathForLane(wName, hubName, hubsCoords);
+                        
+                        let defaultDistance = 0;
+                        for (let i = 0; i < defaultPath.length - 1; i++) {
+                            const u = defaultPath[i];
+                            const v = defaultPath[i+1];
+                            if (graph.nodes[u] && graph.nodes[v]) {
+                                defaultDistance += haversineDistance(graph.nodes[u].lat, graph.nodes[u].lon, graph.nodes[v].lat, graph.nodes[v].lon);
+                            }
+                        }
+                        if (defaultDistance === 0) {
+                            const uNode = graph.nodes[wName];
+                            const vNode = graph.nodes[hubName];
+                            if (uNode && vNode) {
+                                defaultDistance = haversineDistance(uNode.lat, uNode.lon, vNode.lat, vNode.lon);
+                            }
+                        }
+
+                        const laneOrders = orders.filter(o => {
+                            const currentSource = o.SourceWarehouse || "Patna HQ DC";
+                            return currentSource === wName && o.RouteHub === hubName;
+                        });
+                        const activeOrdersCount = laneOrders.filter(o => o.Status !== "Delivered").length;
+                        
+                        let currentAltPathStr = "";
+                        const orderWithAltPath = laneOrders.find(o => o.AltPath && o.AltPath !== "Standard Routing" && o.AltPath !== "Optimal Path Maintained");
+                        if (orderWithAltPath) {
+                            currentAltPathStr = orderWithAltPath.AltPath;
+                        }
+
+                        let currentPathNodes = [];
+                        let currentDistance = 0;
+
+                        if (currentAltPathStr && (currentAltPathStr.includes("➔") || currentAltPathStr.includes("->"))) {
+                            const delimiter = currentAltPathStr.includes("➔") ? "➔" : "->";
+                            currentPathNodes = currentAltPathStr.split(delimiter).map(s => s.trim());
+                            for (let i = 0; i < currentPathNodes.length - 1; i++) {
+                                const u = currentPathNodes[i];
+                                const v = currentPathNodes[i+1];
+                                if (graph.nodes[u] && graph.nodes[v]) {
+                                    currentDistance += haversineDistance(graph.nodes[u].lat, graph.nodes[u].lon, graph.nodes[v].lat, graph.nodes[v].lon);
+                                }
+                            }
+                        } else {
+                            currentPathNodes = defaultPath;
+                            currentDistance = defaultDistance;
+                        }
+
+                        const astarPathNodes = astarResult ? astarResult.path : [wName, hubName];
+                        const astarDistance = astarResult ? astarResult.distance : defaultDistance;
+
+                        const diff = currentDistance - astarDistance;
+                        const savingsKm = diff > 0.5 ? diff : 0;
+                        const savingsPct = currentDistance > 0 && savingsKm > 0 ? (savingsKm / currentDistance) * 100 : 0;
+
+                        const isOptimalApplied = currentPathNodes.length === astarPathNodes.length && 
+                            currentPathNodes.every((val, index) => val === astarPathNodes[index]);
+
+                        results.push({
+                            warehouse: wName,
+                            hub: hubName,
+                            defaultPath,
+                            defaultDistance,
+                            astarPathNodes,
+                            astarDistance,
+                            currentPathNodes,
+                            currentDistance,
+                            savingsKm,
+                            savingsPct,
+                            isOptimalApplied,
+                            activeOrdersCount,
+                            totalOrdersCount: laneOrders.length
+                        });
+                    });
+                });
+                return results;
+            }, [warehouses, hubsCoords, orders, graph]);
+
+            useEffect(() => {
+                if (computedLanes.length > 0 && (!selectedWarehouse || !selectedHub)) {
+                    const bestLane = computedLanes.find(l => l.activeOrdersCount > 0 && !l.isOptimalApplied) ||
+                                     computedLanes.find(l => l.activeOrdersCount > 0) ||
+                                     computedLanes[0];
+                    if (bestLane) {
+                        setSelectedWarehouse(bestLane.warehouse);
+                        setSelectedHub(bestLane.hub);
+                    }
+                }
+            }, [computedLanes, selectedWarehouse, selectedHub]);
+
+            useEffect(() => {
+                if (!selectedWarehouse || !selectedHub) return;
+                const lane = computedLanes.find(l => l.warehouse === selectedWarehouse && l.hub === selectedHub);
+                if (!lane) return;
+
+                let isMounted = true;
+                setLoadingRoads(true);
+
+                const fetchRoadCoords = async () => {
+                    const optNodes = lane.astarPathNodes;
+                    const curNodes = lane.currentPathNodes;
+                    
+                    let optPromise = Promise.resolve(null);
+                    let curPromise = Promise.resolve(null);
+
+                    if (optNodes && optNodes.length > 1) {
+                        const coordsStr = optNodes.map(n => {
+                            const node = graph.nodes[n];
+                            return node ? `${node.lon},${node.lat}` : null;
+                        }).filter(Boolean).join(";");
+                        
+                        if (coordsStr) {
+                            optPromise = fetch(`/api/route-snapping?coords=${coordsStr}&overview=full&geometries=geojson`)
+                                .then(r => r.ok ? r.json() : null)
+                                .then(data => {
+                                    if (data && data.routes && data.routes[0]) {
+                                        return data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                                    }
+                                    return null;
+                                })
+                                .catch(err => {
+                                    console.error("OSRM optimal road fetch failed:", err);
+                                    return null;
+                                });
+                        }
+                    }
+
+                    if (curNodes && curNodes.length > 1) {
+                        const coordsStr = curNodes.map(n => {
+                            const node = graph.nodes[n];
+                            return node ? `${node.lon},${node.lat}` : null;
+                        }).filter(Boolean).join(";");
+                        
+                        if (coordsStr) {
+                            curPromise = fetch(`/api/route-snapping?coords=${coordsStr}&overview=full&geometries=geojson`)
+                                .then(r => r.ok ? r.json() : null)
+                                .then(data => {
+                                    if (data && data.routes && data.routes[0]) {
+                                        return data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                                    }
+                                    return null;
+                                })
+                                .catch(err => {
+                                    console.error("OSRM current road fetch failed:", err);
+                                    return null;
+                                });
+                        }
+                    }
+
+                    const [optCoords, curCoords] = await Promise.all([optPromise, curPromise]);
+                    
+                    if (isMounted) {
+                        setOptimalRoadCoords(optCoords || []);
+                        setCurrentRoadCoords(curCoords || []);
+                        setLoadingRoads(false);
+                    }
+                };
+
+                fetchRoadCoords();
+
+                return () => {
+                    isMounted = false;
+                };
+            }, [selectedWarehouse, selectedHub, computedLanes, graph]);
+
+            const filteredLanes = React.useMemo(() => {
+                let res = computedLanes.filter(lane => {
+                    if (warehouseFilter !== "all" && lane.warehouse !== warehouseFilter) {
+                        return false;
+                    }
+                    if (searchQuery) {
+                        const q = searchQuery.toLowerCase();
+                        if (!lane.warehouse.toLowerCase().includes(q) && !lane.hub.toLowerCase().includes(q)) {
+                            return false;
+                        }
+                    }
+                    if (statusFilter === "needs_opt") {
+                        return !lane.isOptimalApplied && lane.savingsKm > 0.5 && lane.activeOrdersCount > 0;
+                    } else if (statusFilter === "optimal") {
+                        return lane.isOptimalApplied && lane.activeOrdersCount > 0;
+                    } else if (statusFilter === "no_orders") {
+                        return lane.activeOrdersCount === 0;
+                    }
+                    return true;
+                });
+
+                return res.sort((a, b) => {
+                    if (sortBy === "distance_asc") return a.astarDistance - b.astarDistance;
+                    if (sortBy === "distance_desc") return b.astarDistance - a.astarDistance;
+                    if (sortBy === "savings_desc") return b.savingsKm - a.savingsKm;
+                    if (sortBy === "orders_desc") return b.activeOrdersCount - a.activeOrdersCount;
+                    return 0;
+                });
+            }, [computedLanes, warehouseFilter, searchQuery, statusFilter, sortBy]);
+
+            const activeLane = React.useMemo(() => {
+                return computedLanes.find(l => l.warehouse === selectedWarehouse && l.hub === selectedHub);
+            }, [computedLanes, selectedWarehouse, selectedHub]);
+
+            const allPossiblePaths = React.useMemo(() => {
+                if (!selectedWarehouse || !selectedHub) return [];
+                const paths = findAllSimplePaths(selectedWarehouse, selectedHub, graph, 5, 6);
+                
+                return paths.map(p => {
+                    const isAstar = activeLane && p.path.length === activeLane.astarPathNodes.length && p.path.every((v, i) => v === activeLane.astarPathNodes[i]);
+                    const isDefault = activeLane && p.path.length === activeLane.defaultPath.length && p.path.every((v, i) => v === activeLane.defaultPath[i]);
+                    const isCurrent = activeLane && p.path.length === activeLane.currentPathNodes.length && p.path.every((v, i) => v === activeLane.currentPathNodes[i]);
+                    return { ...p, isAstar, isDefault, isCurrent };
+                });
+            }, [selectedWarehouse, selectedHub, graph, activeLane]);
+
+            const handleApplyOptimal = async () => {
+                if (!activeLane) return;
+                setApplying(true);
+                try {
+                    const optimalPathStr = activeLane.astarPathNodes.join(" ➔ ");
+                    const success = await onUpdateLaneRoute(activeLane.warehouse, activeLane.hub, optimalPathStr);
+                    if (success) {
+                        setSuccessMessage(`Successfully updated lane ${activeLane.warehouse} ➔ ${activeLane.hub} to Optimal A* Route!`);
+                        setTimeout(() => setSuccessMessage(null), 5000);
+                    }
+                } catch (err) {
+                    alert("Failed to apply optimal route: " + err.message);
+                } finally {
+                    setApplying(false);
+                }
+            };
+
+            useEffect(() => {
+                if (!mapContainerRef.current) return;
+
+                if (viewMapRef.current) {
+                    viewMapRef.current.remove();
+                    viewMapRef.current = null;
+                }
+
+                const map = L.map(mapContainerRef.current, { zoomControl: true }).setView([22.5, 82.0], 5);
+                viewMapRef.current = map;
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+                if (theme === 'dark') {
+                    const tilePane = map.getPane('tilePane');
+                    if (tilePane) {
+                        tilePane.style.filter = 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)';
+                    }
+                }
+
+                const markerCoords = [];
+                const warehouseIcon = L.divIcon({
+                    html: `<div class="w-5 h-5 rounded-full bg-blue-600 border-2 border-white flex items-center justify-center shadow"><i class="fa-solid fa-warehouse text-[9px] text-white"></i></div>`,
+                    className: '',
+                    iconSize: [20, 20]
+                });
+                const selectedHubIcon = L.divIcon({
+                    html: `<div class="w-5 h-5 rounded-full bg-red-600 border-2 border-white flex items-center justify-center shadow animate-pulse"><i class="fa-solid fa-truck-ramp-box text-[9px] text-white"></i></div>`,
+                    className: '',
+                    iconSize: [20, 20]
+                });
+                const normalHubIcon = L.divIcon({
+                    html: `<div class="w-2.5 h-2.5 rounded-full bg-slate-600 border border-white shadow"></div>`,
+                    className: '',
+                    iconSize: [10, 10]
+                });
+
+                Object.keys(graph.nodes).forEach(nKey => {
+                    const node = graph.nodes[nKey];
+                    const isWarehouse = node.isWarehouse;
+                    const isSelectedH = nKey === selectedHub;
+                    
+                    let icon = normalHubIcon;
+                    if (isWarehouse) icon = warehouseIcon;
+                    else if (isSelectedH) icon = selectedHubIcon;
+
+                    const marker = L.marker([node.lat, node.lon], { icon }).addTo(map);
+                    marker.bindPopup(`<b>${isWarehouse ? 'Warehouse' : 'Hub'}:</b> ${nKey}`);
+                    markerCoords.push([node.lat, node.lon]);
+                });
+
+                Object.keys(graph.adj).forEach(u => {
+                    const uNode = graph.nodes[u];
+                    graph.adj[u].forEach(edge => {
+                        const v = edge.node;
+                        const vNode = graph.nodes[v];
+                        if (u < v) {
+                            L.polyline([[uNode.lat, uNode.lon], [vNode.lat, vNode.lon]], {
+                                color: '#475569',
+                                weight: 1,
+                                opacity: 0.15,
+                                dashArray: '2, 3'
+                            }).addTo(map);
+                        }
+                    });
+                });
+
+                const currentCoords = currentRoadCoords.length > 0 
+                    ? currentRoadCoords 
+                    : (activeLane && activeLane.currentPathNodes 
+                        ? activeLane.currentPathNodes.map(n => graph.nodes[n] ? [graph.nodes[n].lat, graph.nodes[n].lon] : null).filter(Boolean)
+                        : []);
+
+                if (currentCoords.length > 1) {
+                    L.polyline(currentCoords, {
+                        color: '#f97316',
+                        weight: 3,
+                        dashArray: '5, 6',
+                        opacity: 0.8
+                    }).addTo(map).bindPopup(`<b>Current:</b> ${activeLane.currentPathNodes.join(" ➔ ")}`);
+                }
+
+                const optimalCoords = optimalRoadCoords.length > 0 
+                    ? optimalRoadCoords 
+                    : (activeLane && activeLane.astarPathNodes 
+                        ? activeLane.astarPathNodes.map(n => graph.nodes[n] ? [graph.nodes[n].lat, graph.nodes[n].lon] : null).filter(Boolean)
+                        : []);
+
+                if (optimalCoords.length > 1) {
+                    L.polyline(optimalCoords, {
+                        color: '#10b981',
+                        weight: 4.5,
+                        opacity: 0.95
+                    }).addTo(map).bindPopup(`<b>Optimal (A*):</b> ${activeLane.astarPathNodes.join(" ➔ ")}`);
+
+                    const bounds = L.latLngBounds(optimalCoords);
+                    map.fitBounds(bounds, { padding: [40, 40] });
+                } else if (markerCoords.length > 0) {
+                    map.fitBounds(L.latLngBounds(markerCoords), { padding: [20, 20] });
+                }
+
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 300);
+
+                return () => {
+                    if (viewMapRef.current) {
+                        viewMapRef.current.remove();
+                        viewMapRef.current = null;
+                    }
+                };
+            }, [selectedWarehouse, selectedHub, graph, activeLane, theme, optimalRoadCoords, currentRoadCoords]);
+
+            const metrics = React.useMemo(() => {
+                const totalLanes = computedLanes.length;
+                const activeLanes = computedLanes.filter(l => l.activeOrdersCount > 0);
+                const optimalActive = activeLanes.filter(l => l.isOptimalApplied).length;
+                const needsOpt = activeLanes.filter(l => !l.isOptimalApplied && l.savingsKm > 0.5);
+                const totalSavingsKm = needsOpt.reduce((acc, l) => acc + l.savingsKm, 0);
+                const activeOrdersOnSuboptimal = needsOpt.reduce((acc, l) => acc + l.activeOrdersCount, 0);
+                
+                return {
+                    totalLanes,
+                    activeLanes: activeLanes.length,
+                    optimalActive,
+                    needsOpt: needsOpt.length,
+                    totalSavingsKm,
+                    activeOrdersOnSuboptimal
+                };
+            }, [computedLanes]);
+
+            const uniqueWarehouses = Object.keys(warehouses);
+            const uniqueHubs = Object.keys(hubsCoords);
+
+            return (
+                <div className="flex-1 p-6 overflow-y-auto space-y-4 custom-scrollbar text-slate-100 font-sans bg-darkBg h-full max-w-7xl mx-auto pb-6 animate-fadeIn">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-borderSlate/60 pb-3">
+                        <div>
+                            <h2 className="text-lg md:text-xl font-bold bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-2">
+                                <i className="fa-solid fa-route text-indigo-400"></i> Routes & Network Optimization
+                            </h2>
+                            <p className="text-[10px] text-slate-400 font-medium">
+                                Configure, inspect, and optimize logistical lanes across the network using the A* shortest pathfinding algorithm.
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <button
+                                onClick={() => setViewMode("matrix")}
+                                className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition flex items-center gap-1 ${viewMode === "matrix" ? "bg-indigo-600 text-white shadow" : "bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white"}`}
+                            >
+                                <i className="fa-solid fa-border-all"></i> Matrix Grid
+                            </button>
+                            <button
+                                onClick={() => setViewMode("list")}
+                                className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition flex items-center gap-1 ${viewMode === "list" ? "bg-indigo-600 text-white shadow" : "bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white"}`}
+                            >
+                                <i className="fa-solid fa-list-ul"></i> Lanes Registry
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <div className="bg-panelBg border border-borderSlate/60 p-2 rounded-lg shadow flex items-center gap-2">
+                            <div className="w-7 h-7 rounded bg-blue-950/50 border border-blue-500/20 flex items-center justify-center text-blue-400 flex-shrink-0">
+                                <i className="fa-solid fa-warehouse text-[10px]"></i>
+                            </div>
+                            <div>
+                                <span className="text-[8.5px] text-slate-400 font-bold uppercase tracking-wider block leading-none">Network Lanes</span>
+                                <div className="flex items-baseline gap-1 mt-0.5">
+                                    <span className="text-xs font-bold font-mono text-white leading-none">{metrics.totalLanes}</span>
+                                    <span className="text-[7.5px] text-slate-500 leading-none">({uniqueWarehouses.length}W×{uniqueHubs.length}H)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-panelBg border border-borderSlate/60 p-2 rounded-lg shadow flex items-center gap-2">
+                            <div className="w-7 h-7 rounded bg-emerald-950/50 border border-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0">
+                                <i className="fa-solid fa-circle-check text-[10px]"></i>
+                            </div>
+                            <div>
+                                <span className="text-[8.5px] text-slate-400 font-bold uppercase tracking-wider block leading-none">Optimized Lanes</span>
+                                <div className="flex items-baseline gap-1 mt-0.5">
+                                    <span className="text-xs font-bold font-mono text-emerald-400 leading-none">{metrics.optimalActive}</span>
+                                    <span className="text-[7.5px] text-slate-500 leading-none">/ {metrics.activeLanes} active</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-panelBg border border-borderSlate/60 p-2 rounded-lg shadow flex items-center gap-2">
+                            <div className="w-7 h-7 rounded bg-amber-950/50 border border-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0">
+                                <i className="fa-solid fa-triangle-exclamation text-[10px]"></i>
+                            </div>
+                            <div>
+                                <span className="text-[8.5px] text-slate-400 font-bold uppercase tracking-wider block leading-none">Optimize Available</span>
+                                <div className="flex items-baseline gap-1 mt-0.5">
+                                    <span className="text-xs font-bold font-mono text-amber-400 leading-none">{metrics.needsOpt}</span>
+                                    <span className="text-[7.5px] text-amber-500 leading-none">lanes</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-panelBg border border-borderSlate/60 p-2 rounded-lg shadow flex items-center gap-2">
+                            <div className="w-7 h-7 rounded bg-purple-950/50 border border-purple-500/20 flex items-center justify-center text-purple-400 flex-shrink-0">
+                                <i className="fa-solid fa-gauge text-[10px]"></i>
+                            </div>
+                            <div>
+                                <span className="text-[8.5px] text-slate-400 font-bold uppercase tracking-wider block leading-none">Total Savings Est.</span>
+                                <div className="flex items-baseline gap-1 mt-0.5">
+                                    <span className="text-xs font-bold font-mono text-purple-400 leading-none">-{metrics.totalSavingsKm.toFixed(0)} km</span>
+                                    <span className="text-[7.5px] text-purple-500 leading-none">({metrics.activeOrdersOnSuboptimal} orders)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {successMessage && (
+                        <div className="bg-emerald-950/80 border border-emerald-500/30 text-emerald-300 px-3 py-2 rounded-lg text-[11px] font-semibold flex items-center justify-between shadow">
+                            <span className="flex items-center gap-1.5"><i className="fa-solid fa-circle-check text-emerald-400"></i> {successMessage}</span>
+                            <button onClick={() => setSuccessMessage(null)} className="hover:text-white"><i className="fa-solid fa-xmark"></i></button>
+                        </div>
+                    )}
+
+                    <div className="bg-panelBg border border-borderSlate/65 p-2.5 rounded-lg shadow flex flex-wrap gap-3 items-center justify-between">
+                        <div className="flex flex-wrap gap-2.5 items-center">
+                            <div>
+                                <label className="text-[8px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Search Lanes</label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder="Search hubs/warehouses..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="bg-slate-900 border border-borderSlate rounded-lg px-2 py-1 pl-7 text-[11px] text-white focus:outline-none focus:border-brandBlue w-44 font-medium"
+                                    />
+                                    <i className="fa-solid fa-magnifying-glass text-slate-500 absolute left-2.5 top-2 text-[10px]"></i>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="text-[8px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Filter Warehouse</label>
+                                <select
+                                    value={warehouseFilter}
+                                    onChange={(e) => setWarehouseFilter(e.target.value)}
+                                    className="bg-slate-900 border border-borderSlate rounded-lg px-2 py-1 text-[11px] text-white focus:outline-none focus:border-brandBlue font-medium cursor-pointer"
+                                >
+                                    <option value="all">All Warehouses</option>
+                                    {uniqueWarehouses.map(w => (
+                                        <option key={w} value={w}>{w}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="text-[8px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Routing Status</label>
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="bg-slate-900 border border-borderSlate rounded-lg px-2 py-1 text-[11px] text-white focus:outline-none focus:border-brandBlue font-medium cursor-pointer"
+                                >
+                                    <option value="all">All Lanes</option>
+                                    <option value="needs_opt">Needs Optimization ({metrics.needsOpt})</option>
+                                    <option value="optimal">Already Optimal</option>
+                                    <option value="no_orders">No Active Orders</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="text-[8px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Sort Registry</label>
+                            <select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="bg-slate-900 border border-borderSlate rounded-lg px-2 py-1 text-[11px] text-white focus:outline-none focus:border-brandBlue font-medium cursor-pointer"
+                            >
+                                <option value="savings_desc">Sort by Distance Savings</option>
+                                <option value="orders_desc">Sort by Active Orders</option>
+                                <option value="distance_asc">Sort by Shortest Path (Asc)</option>
+                                <option value="distance_desc">Sort by Shortest Path (Desc)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {viewMode === "matrix" ? (
+                        <div className="bg-panelBg border border-borderSlate/60 rounded-xl p-4 shadow flex flex-col overflow-hidden">
+                            <div className="flex justify-between items-center mb-2">
+                                <h3 className="text-[10px] uppercase font-bold text-slate-300 tracking-wider">Transit Lanes Matrix (Warehouses vs Delivery Hubs)</h3>
+                                <span className="text-[9px] text-slate-500 font-semibold">Click on any cell to inspect details & map</span>
+                            </div>
+                            
+                            <div className="overflow-x-auto border border-borderSlate/40 rounded-lg max-h-[300px] overflow-y-auto">
+                                <table className="w-full text-left border-collapse min-w-[900px]">
+                                    <thead>
+                                        <tr className="bg-slate-900/90 sticky top-0 z-10 border-b border-borderSlate/60">
+                                            <th className="py-2 px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider sticky left-0 bg-slate-900 border-r border-borderSlate/40 w-44 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.5)]">
+                                                Supply Point / Wh
+                                            </th>
+                                            {uniqueHubs.map(hub => {
+                                                const cleanHub = hub.split(",")[0];
+                                                return (
+                                                    <th key={hub} className="py-1.5 px-2 text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center min-w-[105px] border-r border-borderSlate/30">
+                                                        {cleanHub}
+                                                    </th>
+                                                );
+                                            })}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {uniqueWarehouses.map((w, idx) => (
+                                            <tr key={w} className={`border-b border-borderSlate/30 hover:bg-slate-800/20 transition ${idx % 2 === 0 ? 'bg-slate-950/20' : 'bg-slate-900/10'}`}>
+                                                <td className="py-2 px-3 text-xs font-bold text-slate-200 sticky left-0 bg-slate-950/95 border-r border-borderSlate/45 w-44 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.5)]">
+                                                    <div className="flex items-center gap-1.5 font-sans font-bold w-full">
+                                                        <i className="fa-solid fa-warehouse text-blue-400 text-[10px] shrink-0"></i>
+                                                        <span className="truncate" title={w}>{w}</span>
+                                                    </div>
+                                                </td>
+                                                {uniqueHubs.map(hub => {
+                                                    const lane = computedLanes.find(l => l.warehouse === w && l.hub === hub);
+                                                    if (!lane) return <td key={hub} className="p-2 border-r border-borderSlate/30 text-center">-</td>;
+                                                    
+                                                    const isSelected = selectedWarehouse === w && selectedHub === hub;
+                                                    let cellBg = "bg-slate-900/40 hover:bg-slate-800/80 text-slate-500 border-r border-borderSlate/20";
+                                                    let statusText = "No Orders";
+                                                    let statusIcon = "●";
+                                                    let displayMetric = `${lane.astarDistance.toFixed(0)} km`;
+
+                                                    if (lane.activeOrdersCount > 0) {
+                                                        if (lane.isOptimalApplied) {
+                                                            cellBg = "bg-emerald-950/30 text-emerald-400 border-r border-emerald-900/30 hover:bg-emerald-900/30 border border-emerald-500/20";
+                                                            statusText = "Optimal Route active";
+                                                            statusIcon = "●";
+                                                        } else if (lane.savingsKm > 0.5) {
+                                                            cellBg = "bg-amber-950/40 text-amber-400 border-r border-amber-900/30 hover:bg-amber-900/30 border border-amber-500/30 animate-pulse";
+                                                            statusText = `Savings potential: -${lane.savingsPct.toFixed(0)}%`;
+                                                            statusIcon = "▲";
+                                                            displayMetric = `-${lane.savingsKm.toFixed(0)} km`;
+                                                        } else {
+                                                            cellBg = "bg-blue-950/20 text-blue-400 border-r border-blue-900/30 hover:bg-blue-900/30 border border-blue-500/15";
+                                                            statusText = "Custom Route active";
+                                                            statusIcon = "●";
+                                                        }
+                                                    }
+
+                                                    if (isSelected) cellBg = "bg-indigo-950/60 border-2 border-indigo-500 text-indigo-200";
+
+                                                    return (
+                                                        <td
+                                                            key={hub}
+                                                            onClick={() => {
+                                                                setSelectedWarehouse(w);
+                                                                setSelectedHub(hub);
+                                                            }}
+                                                            className={`p-1.5 border-r border-borderSlate/30 text-center cursor-pointer transition-all duration-100 ${cellBg}`}
+                                                            title={`${w} ➔ ${hub}\n${statusText}\nOptimal A* Path: ${lane.astarPathNodes.join(" ➔ ")}\nDistance: ${lane.astarDistance.toFixed(1)} km`}
+                                                        >
+                                                            <div className="flex flex-col items-center justify-center min-h-[32px] w-full">
+                                                                <span className="text-[10.5px] font-mono font-bold leading-tight">{displayMetric}</span>
+                                                                {lane.activeOrdersCount > 0 ? (
+                                                                    <div className="flex items-center gap-1 mt-0.5 leading-none">
+                                                                        <span className="text-[7px] font-sans font-extrabold uppercase bg-black/40 px-1 py-0.5 rounded border border-white/5">
+                                                                            {lane.activeOrdersCount} Order{lane.activeOrdersCount > 1 ? 's' : ''}
+                                                                        </span>
+                                                                    </div>
+                                                                ) : (
+                                                                    <span className="text-[7px] text-slate-600 block mt-0.5">Inactive</span>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="bg-panelBg border border-borderSlate/60 rounded-xl p-4 shadow">
+                            <h3 className="text-[10px] uppercase font-bold text-slate-300 tracking-wider mb-2">Lanes Registry ({filteredLanes.length} Lanes Match)</h3>
+                            <div className="overflow-x-auto max-h-[300px] overflow-y-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-slate-900 border-b border-borderSlate/60 sticky top-0 z-10">
+                                            <th className="py-2 px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Lane (Warehouse ➔ Hub)</th>
+                                            <th className="py-2 px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center">Active</th>
+                                            <th className="py-2 px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Current Path</th>
+                                            <th className="py-2 px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">A* Shortest Path</th>
+                                            <th className="py-2 px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Diff</th>
+                                            <th className="py-2 px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Savings</th>
+                                            <th className="py-2 px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Status</th>
+                                            <th className="py-2 px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredLanes.map((lane, idx) => {
+                                            const isSelected = selectedWarehouse === lane.warehouse && selectedHub === lane.hub;
+                                            return (
+                                                <tr
+                                                    key={`${lane.warehouse}-${lane.hub}`}
+                                                    onClick={() => {
+                                                        setSelectedWarehouse(lane.warehouse);
+                                                        setSelectedHub(lane.hub);
+                                                    }}
+                                                    className={`border-b border-borderSlate/35 hover:bg-slate-800/40 transition cursor-pointer text-xs ${isSelected ? 'bg-indigo-950/30' : (idx % 2 === 0 ? 'bg-slate-950/10' : 'bg-slate-900/10')}`}
+                                                >
+                                                    <td className="py-2 px-3 font-semibold text-slate-100 flex items-center gap-1.5">
+                                                        <span className="text-blue-400 font-bold">{lane.warehouse}</span>
+                                                        <span className="text-slate-500 font-normal">➔</span>
+                                                        <span className="text-red-400 font-semibold">{lane.hub}</span>
+                                                    </td>
+                                                    <td className="py-2 px-3 text-center font-mono font-bold">
+                                                        {lane.activeOrdersCount > 0 ? (
+                                                            <span className="bg-indigo-950/80 text-brandBlue px-1.5 py-0.5 rounded border border-brandBlue/20 text-[10px] font-bold">
+                                                                {lane.activeOrdersCount}
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-slate-650 font-semibold">0</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="py-2 px-3 text-slate-400 truncate max-w-[150px]" title={lane.currentPathNodes.join(" ➔ ")}>
+                                                        {lane.currentPathNodes.join(" ➔ ")} ({lane.currentDistance.toFixed(0)} km)
+                                                    </td>
+                                                    <td className="py-2 px-3 text-emerald-400 truncate max-w-[150px]" title={lane.astarPathNodes.join(" ➔ ")}>
+                                                        {lane.astarPathNodes.join(" ➔ ")} ({lane.astarDistance.toFixed(0)} km)
+                                                    </td>
+                                                    <td className="py-2 px-3 font-mono text-slate-300">
+                                                        {lane.currentDistance.toFixed(0)} vs {lane.astarDistance.toFixed(0)} km
+                                                    </td>
+                                                    <td className="py-2 px-3 font-mono font-bold">
+                                                        {lane.savingsKm > 0.5 ? (
+                                                            <span className="text-amber-400">-{lane.savingsKm.toFixed(0)} km (-{lane.savingsPct.toFixed(0)}%)</span>
+                                                        ) : (
+                                                            <span className="text-slate-500">0%</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="py-2 px-3">
+                                                        {lane.activeOrdersCount === 0 ? (
+                                                            <span className="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700 font-bold">Inactive</span>
+                                                        ) : lane.isOptimalApplied ? (
+                                                            <span className="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-900 font-bold flex items-center gap-0.5 w-fit"><i className="fa-solid fa-check"></i> Optimal</span>
+                                                        ) : (
+                                                            <span className="text-[9px] bg-amber-950 text-amber-400 px-1.5 py-0.5 rounded border border-amber-900 font-bold flex items-center gap-0.5 w-fit animate-pulse"><i className="fa-solid fa-triangle-exclamation"></i> Optimize</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="py-2 px-3 text-right">
+                                                        {!lane.isOptimalApplied && lane.savingsKm > 0.5 && lane.activeOrdersCount > 0 ? (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setSelectedWarehouse(lane.warehouse);
+                                                                    setSelectedHub(lane.hub);
+                                                                    handleApplyOptimal();
+                                                                }}
+                                                                disabled={applying}
+                                                                className="bg-amber-600 hover:bg-amber-500 text-white font-bold px-1.5 py-0.5 rounded text-[9px] transition cursor-pointer"
+                                                            >
+                                                                Optimize
+                                                            </button>
+                                                        ) : (
+                                                            <span className="text-[9px] text-slate-550 italic">Optimal</span>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeLane && (
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+                            <div className="lg:col-span-5 bg-panelBg border border-borderSlate/60 rounded-xl p-4 shadow-lg flex flex-col justify-between h-[450px]">
+                                <div className="space-y-3 overflow-y-auto pr-1 custom-scrollbar flex-1">
+                                    <div className="flex justify-between items-start border-b border-borderSlate/45 pb-2">
+                                        <div>
+                                            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-wider block">Selected Lane</span>
+                                            <h3 className="text-xs font-bold flex items-center gap-1.5 mt-0.5">
+                                                <span className="text-blue-400">{activeLane.warehouse}</span>
+                                                <i className="fa-solid fa-arrow-right text-[9px] text-slate-500"></i>
+                                                <span className="text-red-400">{activeLane.hub}</span>
+                                            </h3>
+                                        </div>
+                                        <div className="text-right">
+                                            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-wider block">Active Orders</span>
+                                            <span className="text-[10px] font-mono font-bold bg-indigo-950/70 border border-brandBlue/20 text-brandBlue px-1.5 py-0.5 rounded block mt-0.5 w-fit ml-auto">
+                                                {activeLane.activeOrdersCount} Order{activeLane.activeOrdersCount !== 1 ? 's' : ''}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-2 bg-slate-900/50 p-2.5 rounded border border-borderSlate/30">
+                                        <div>
+                                            <span className="text-[8px] text-slate-400 font-bold block uppercase tracking-wider">Current Distance</span>
+                                            <span className="text-sm font-bold font-mono text-white block mt-0.5">{activeLane.currentDistance.toFixed(1)} km</span>
+                                            <span className="text-[8px] text-slate-500 font-medium">({activeLane.currentPathNodes.length - 1} hops)</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[8px] text-slate-400 font-bold block uppercase tracking-wider">Optimal A* Distance</span>
+                                            <span className="text-sm font-bold font-mono text-emerald-400 block mt-0.5">{activeLane.astarDistance.toFixed(1)} km</span>
+                                            <span className="text-[8px] text-slate-500 font-medium">({activeLane.astarPathNodes.length - 1} hops)</span>
+                                        </div>
+                                    </div>
+
+                                    {!activeLane.isOptimalApplied && activeLane.savingsKm > 0.5 ? (
+                                        <div className="bg-amber-950/40 border border-amber-500/20 rounded p-2.5 text-[11px] text-amber-300 flex items-start gap-2">
+                                            <i className="fa-solid fa-triangle-exclamation text-amber-400 text-xs mt-0.5"></i>
+                                            <div>
+                                                <span className="font-bold block">Suboptimal Route Active</span>
+                                                <span className="block text-slate-400 text-[10px] mt-0.5 leading-relaxed">
+                                                    Applying A* optimal route will save <strong>{activeLane.savingsKm.toFixed(1)} km</strong> ({activeLane.savingsPct.toFixed(0)}% overhead).
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="bg-emerald-950/20 border border-emerald-500/20 rounded p-2.5 text-[11px] text-emerald-400 flex items-start gap-2">
+                                            <i className="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                            <div>
+                                                <span className="font-bold block">Optimal Route Engaged</span>
+                                                <span className="block text-slate-400 text-[10px] mt-0.5 leading-relaxed">
+                                                    The shortest path is already registered and active for this lane.
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div>
+                                        <h4 className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Paths Record Matrix (Graph Search)</h4>
+                                        <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
+                                            {allPossiblePaths.map((p, pIdx) => {
+                                                let borderClass = "border-borderSlate/40 bg-slate-900/30";
+                                                let tagBadge = null;
+
+                                                if (p.isAstar) {
+                                                    borderClass = "border-emerald-500/40 bg-emerald-950/10 shadow-sm shadow-emerald-900/10";
+                                                    tagBadge = <span className="text-[8px] font-bold px-1 py-0.5 rounded bg-emerald-950 border border-emerald-500/30 text-emerald-400 uppercase font-mono">Shortest (A*)</span>;
+                                                } else if (p.isCurrent) {
+                                                    borderClass = "border-amber-500/30 bg-amber-950/10";
+                                                    tagBadge = <span className="text-[8px] font-bold px-1 py-0.5 rounded bg-amber-950 border border-amber-500/20 text-amber-400 uppercase font-mono">Current</span>;
+                                                } else if (p.isDefault) {
+                                                    borderClass = "border-slate-700 bg-slate-800/20";
+                                                    tagBadge = <span className="text-[8px] font-bold px-1 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400 uppercase font-mono">Standard</span>;
+                                                }
+
+                                                return (
+                                                    <div key={pIdx} className={`border rounded p-2 text-[11px] transition hover:bg-slate-850 ${borderClass}`}>
+                                                        <div className="flex justify-between items-center mb-1">
+                                                            <span className="font-semibold text-slate-300">Path Option #{pIdx + 1}</span>
+                                                            <div className="flex items-center gap-1.5">
+                                                                {tagBadge}
+                                                                <span className="font-mono font-bold text-slate-200">{p.distance.toFixed(1)} km</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-wrap items-center gap-1 text-slate-400 font-medium">
+                                                            {p.path.map((node, nodeIdx) => {
+                                                                const cleanN = node.split(",")[0];
+                                                                return (
+                                                                    <React.Fragment key={nodeIdx}>
+                                                                        {nodeIdx > 0 && <i className="fa-solid fa-chevron-right text-[7px] text-slate-600"></i>}
+                                                                        <span className={`${nodeIdx === 0 ? 'text-blue-400 font-bold' : (nodeIdx === p.path.length - 1 ? 'text-red-400 font-bold' : 'text-slate-300')}`}>
+                                                                            {cleanN}
+                                                                        </span>
+                                                                    </React.Fragment>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="mt-3 border-t border-borderSlate/40 pt-3 flex-shrink-0">
+                                    {!activeLane.isOptimalApplied && activeLane.savingsKm > 0.5 && activeLane.activeOrdersCount > 0 ? (
+                                        <button
+                                            onClick={handleApplyOptimal}
+                                            disabled={applying}
+                                            className="w-full bg-amber-600 hover:bg-amber-500 disabled:bg-slate-800 text-white font-bold py-2 rounded-lg text-[11px] transition shadow flex items-center justify-center gap-1.5 cursor-pointer border border-amber-500/20"
+                                        >
+                                            {applying ? (
+                                                <>
+                                                    <i className="fa-solid fa-spinner animate-spin text-[10px]"></i>
+                                                    <span>Applying Optimal Route...</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <i className="fa-solid fa-circle-check text-[10px]"></i>
+                                                    <span>Apply Optimal Path for {activeLane.activeOrdersCount} Order{activeLane.activeOrdersCount > 1 ? 's' : ''}</span>
+                                                </>
+                                            )}
+                                        </button>
+                                    ) : (
+                                        <button
+                                            disabled={true}
+                                            className="w-full bg-slate-800 text-slate-500 font-bold py-2 rounded-lg text-[11px] flex items-center justify-center gap-1.5 border border-borderSlate cursor-not-allowed"
+                                        >
+                                            <i className="fa-solid fa-check-double text-slate-650 text-[10px]"></i>
+                                            <span>{activeLane.activeOrdersCount === 0 ? "No Active Orders to Optimize" : "Optimal Path Already Active"}</span>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="lg:col-span-7 bg-panelBg border border-borderSlate/60 rounded-xl p-3 shadow-lg flex flex-col h-[450px]">
+                                <div className="flex justify-between items-center mb-1.5 flex-shrink-0">
+                                    <h3 className="text-[10px] uppercase font-bold text-slate-300 tracking-wider flex items-center gap-1.5">
+                                        <i className="fa-solid fa-map-location-dot text-indigo-400"></i> RoadSnapped Path Visualizer
+                                    </h3>
+                                    <div className="flex items-center gap-2.5 text-[8.5px] font-semibold text-slate-400">
+                                        <span className="flex items-center gap-0.5"><span className="w-2 h-1 bg-emerald-500 inline-block rounded-sm"></span> A* Optimal</span>
+                                        <span className="flex items-center gap-0.5"><span className="w-2 h-1 bg-orange-500 inline-block rounded-sm border border-dashed border-white/20"></span> Current</span>
+                                        <span className="flex items-center gap-0.5"><span className="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block"></span> Warehouse</span>
+                                        <span className="flex items-center gap-0.5"><span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block"></span> Selected Hub</span>
+                                    </div>
+                                </div>
+                                <div className="flex-1 w-full h-full relative rounded-lg border border-borderSlate/45 overflow-hidden bg-slate-950">
+                                    <div ref={mapContainerRef} className="absolute inset-0 w-full h-full z-0"></div>
+                                    {loadingRoads && (
+                                        <div className="absolute top-2.5 right-2.5 z-[1000] bg-slate-900/90 border border-borderSlate/60 rounded-md px-2.5 py-1 text-[10px] text-slate-300 font-mono shadow flex items-center gap-1.5 backdrop-blur-sm">
+                                            <i className="fa-solid fa-circle-notch animate-spin text-indigo-400"></i>
+                                            <span>Snapping to roads...</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
         // --- REGISTER ORDER VIEW ---
         const CreateOrderView = ({ warehouses, hubsCoords, weatherData, aqiData, tomtomTrafficData, newsAlerts, onAddOrder, setActiveTab }) => {
             const generateRandomOrderID = () => `DLV-${Math.floor(10000 + Math.random() * 90000)}`;
@@ -2876,23 +4025,26 @@ const XLSX = window.XLSX;
             const [tomtomApiKeyInput, setTomtomApiKeyInput] = useState(localStorage.getItem('tomtom_api_key') || "yPCbGn1DIPYIoLEnE16Hjzelv2F1PELm");
             const [visualCrossingApiKeyInput, setVisualCrossingApiKeyInput] = useState(localStorage.getItem('visualcrossing_api_key') || "R22UE4UEGT3RUP4DGEV3B2V37");
             const [waqiApiKeyInput, setWaqiApiKeyInput] = useState(localStorage.getItem('waqi_api_key') || "d75116f2fa4f039d4b6d8cd3291229c0fc92744c");
+            const [windyApiKeyInput, setWindyApiKeyInput] = useState(localStorage.getItem('windy_api_key') || "LAZlrX699xGNQwLZdPQATmjzYObS1AS5");
             
             // Telemetry integration states
             const [weatherSourceString, setWeatherSourceString] = useState("Weather Feed (Cascade)");
             const [isOwmFallback, setIsOwmFallback] = useState(false);
 
-            const saveConfigurations = async (owmKey, weatherKey, tomtomKey, vcKey, waqiKey) => {
+            const saveConfigurations = async (owmKey, weatherKey, tomtomKey, vcKey, waqiKey, windyKey) => {
                 const trimmedOwm = (owmKey || "").trim();
                 const trimmedWeather = (weatherKey || "").trim();
                 const trimmedTomtom = (tomtomKey || "").trim();
                 const trimmedVc = (vcKey || "").trim();
                 const trimmedWaqi = (waqiKey || "").trim();
+                const trimmedWindy = (windyKey || "").trim();
 
                 localStorage.setItem('openweathermap_api_key', trimmedOwm);
                 localStorage.setItem('weatherapi_api_key', trimmedWeather);
                 localStorage.setItem('tomtom_api_key', trimmedTomtom);
                 localStorage.setItem('visualcrossing_api_key', trimmedVc);
                 localStorage.setItem('waqi_api_key', trimmedWaqi);
+                localStorage.setItem('windy_api_key', trimmedWindy);
 
                 try {
                     await fetch("/api/keys", {
@@ -2903,7 +4055,8 @@ const XLSX = window.XLSX;
                             weatherapi: trimmedWeather,
                             tomtom: trimmedTomtom,
                             visualcrossing: trimmedVc,
-                            waqi: trimmedWaqi
+                            waqi: trimmedWaqi,
+                            windy: trimmedWindy
                         })
                     });
                 } catch (err) {
@@ -2915,6 +4068,7 @@ const XLSX = window.XLSX;
                 setTomtomApiKeyInput(trimmedTomtom);
                 setVisualCrossingApiKeyInput(trimmedVc);
                 setWaqiApiKeyInput(trimmedWaqi);
+                setWindyApiKeyInput(trimmedWindy);
                 setSettingsOpen(false);
                 if (Object.keys(hubsCoords).length > 0) {
                     setLoadingStage("Refreshing dashboard configurations and live feeds...");
@@ -3307,6 +4461,92 @@ const XLSX = window.XLSX;
             };
 
             // Shared weather & AQI helper functions defined at component level
+            const fetchWindy = async (city) => {
+                const windyKey = (localStorage.getItem('windy_api_key') || "LAZlrX699xGNQwLZdPQATmjzYObS1AS5").trim();
+                if (!windyKey) throw new Error("Windy API key not set");
+                
+                const url = "https://api.windy.com/api/point-forecast/v2";
+                const res = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        lat: city.lat,
+                        lon: city.lon,
+                        model: "gfs",
+                        parameters: ["temp", "wind", "precip", "lclouds", "mclouds"],
+                        levels: ["surface"],
+                        key: windyKey
+                    })
+                });
+
+                if (!res.ok) {
+                    throw new Error(`Windy API failed with status ${res.status}`);
+                }
+
+                const json = await res.json();
+                
+                // Find closest timestamp to now
+                const nowMs = Date.now();
+                let closestIdx = 0;
+                if (json.ts && json.ts.length > 0) {
+                    let minDiff = Infinity;
+                    for (let i = 0; i < json.ts.length; i++) {
+                        const diff = Math.abs(json.ts[i] - nowMs);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            closestIdx = i;
+                        }
+                    }
+                }
+
+                // Extract temperature
+                const rawTemp = json['temp-surface'] ? json['temp-surface'][closestIdx] : null;
+                // Convert Kelvin to Celsius if unit is K
+                let temp = rawTemp;
+                if (temp !== null) {
+                    const tempUnit = json.units ? json.units['temp-surface'] : 'K';
+                    if (tempUnit === 'K' || temp > 100) {
+                        temp = temp - 273.15;
+                    }
+                }
+
+                // Extract wind speed
+                const u = json['wind_u-surface'] ? json['wind_u-surface'][closestIdx] : 0;
+                const v = json['wind_v-surface'] ? json['wind_v-surface'][closestIdx] : 0;
+                const speedMs = Math.sqrt(u * u + v * v);
+                const windspeed = speedMs * 3.6; // Convert m/s to km/h
+
+                // Extract precip
+                const rain = json['precip-surface'] ? json['precip-surface'][closestIdx] : 0;
+
+                // Extract clouds to map weathercode
+                const lowClouds = json['lclouds-surface'] ? json['lclouds-surface'][closestIdx] : 0;
+                const medClouds = json['mclouds-surface'] ? json['mclouds-surface'][closestIdx] : 0;
+                const maxClouds = Math.max(lowClouds, medClouds);
+
+                let weathercode = 0;
+                if (rain > 1.5) {
+                    weathercode = 63; // rain
+                } else if (rain > 0) {
+                    weathercode = 53; // drizzle
+                } else if (maxClouds > 50) {
+                    weathercode = 2;  // cloudy
+                } else {
+                    weathercode = 0;  // clear
+                }
+
+                const wData = {
+                    temp: temp !== null ? parseFloat(temp.toFixed(1)) : null,
+                    windspeed: parseFloat(windspeed.toFixed(1)),
+                    weathercode,
+                    rain: parseFloat(rain.toFixed(1))
+                };
+
+                return { wData };
+            };
+
             const fetchOWM = async (city) => {
                 const owmKey = (localStorage.getItem('openweathermap_api_key') || "000bd6759eb2260d3900697d8faf36fd").trim();
                 const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${owmKey}&units=metric`;
@@ -3607,23 +4847,14 @@ const XLSX = window.XLSX;
                     const cleanName = city.name.split(",")[0].trim().toLowerCase();
                     const isRemainingCity = remainingCities.includes(cleanName);
 
-                    // Build cascade list depending on if it's a remaining city
-                    let weatherProviders = [];
-                    if (isRemainingCity) {
-                        weatherProviders = [
-                            { name: "Visual Crossing", fn: fetchVisualCrossing },
-                            { name: "OpenWeatherMap", fn: fetchOWM },
-                            { name: "WeatherAPI", fn: fetchWeatherAPI },
-                            { name: "Open-Meteo", fn: fetchOpenMeteoSingle }
-                        ];
-                    } else {
-                        weatherProviders = [
-                            { name: "OpenWeatherMap", fn: fetchOWM },
-                            { name: "WeatherAPI", fn: fetchWeatherAPI },
-                            { name: "Visual Crossing", fn: fetchVisualCrossing },
-                            { name: "Open-Meteo", fn: fetchOpenMeteoSingle }
-                        ];
-                    }
+                    // Build cascade list prioritizing Windy, then OWM, then Visual Crossing, then WeatherAPI, then Open-Meteo
+                    const weatherProviders = [
+                        { name: "Windy", fn: fetchWindy },
+                        { name: "OpenWeatherMap", fn: fetchOWM },
+                        { name: "Visual Crossing", fn: fetchVisualCrossing },
+                        { name: "WeatherAPI", fn: fetchWeatherAPI },
+                        { name: "Open-Meteo", fn: fetchOpenMeteoSingle }
+                    ];
 
                     // Weather Cascade loop
                     for (const provider of weatherProviders) {
@@ -3792,6 +5023,36 @@ const XLSX = window.XLSX;
                 }
             };
 
+            const handleUpdateLaneRoute = async (sourceWarehouse, routeHub, optimalPath) => {
+                try {
+                    const res = await fetch("/api/routes/update-lane", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 
+                            SourceWarehouse: sourceWarehouse, 
+                            RouteHub: routeHub, 
+                            AltPath: optimalPath 
+                        })
+                    });
+                    if (!res.ok) throw new Error("Server responded with an error");
+                    const data = await res.json();
+                    if (data.success) {
+                        setIsRefreshing(true);
+                        setLoadingStage("Updating lane route configurations...");
+                        try {
+                            await triggerDataRefresh(true);
+                        } finally {
+                            setIsRefreshing(false);
+                        }
+                        return true;
+                    }
+                } catch (err) {
+                    console.error("Failed to update lane route:", err);
+                    throw err;
+                }
+                return false;
+            };
+
             // Individual API Sync Handlers
             const refreshOrdersOnly = async () => {
                 if (isRefreshing || refreshingOrders) return;
@@ -3865,22 +5126,13 @@ const XLSX = window.XLSX;
                         const cleanName = city.name.split(",")[0].trim().toLowerCase();
                         const isRemainingCity = remainingCities.includes(cleanName);
 
-                        let weatherProviders = [];
-                        if (isRemainingCity) {
-                            weatherProviders = [
-                                { name: "Visual Crossing", fn: fetchVisualCrossing },
-                                { name: "OpenWeatherMap", fn: fetchOWM },
-                                { name: "WeatherAPI", fn: fetchWeatherAPI },
-                                { name: "Open-Meteo", fn: fetchOpenMeteoSingle }
-                            ];
-                        } else {
-                            weatherProviders = [
-                                { name: "OpenWeatherMap", fn: fetchOWM },
-                                { name: "WeatherAPI", fn: fetchWeatherAPI },
-                                { name: "Visual Crossing", fn: fetchVisualCrossing },
-                                { name: "Open-Meteo", fn: fetchOpenMeteoSingle }
-                            ];
-                        }
+                        const weatherProviders = [
+                            { name: "Windy", fn: fetchWindy },
+                            { name: "OpenWeatherMap", fn: fetchOWM },
+                            { name: "Visual Crossing", fn: fetchVisualCrossing },
+                            { name: "WeatherAPI", fn: fetchWeatherAPI },
+                            { name: "Open-Meteo", fn: fetchOpenMeteoSingle }
+                        ];
 
                         for (const provider of weatherProviders) {
                             try {
@@ -4385,6 +5637,10 @@ const XLSX = window.XLSX;
                                 if (keys.waqi) {
                                     setWaqiApiKeyInput(keys.waqi);
                                     localStorage.setItem('waqi_api_key', keys.waqi);
+                                }
+                                if (keys.windy) {
+                                    setWindyApiKeyInput(keys.windy);
+                                    localStorage.setItem('windy_api_key', keys.windy);
                                 }
                             }
                         } catch (err) {
@@ -5450,7 +6706,7 @@ const XLSX = window.XLSX;
                     `);
 
                     // Route geometry extraction
-                    fetch(`https://router.project-osrm.org/route/v1/driving/${centralWarehouse.lon},${centralWarehouse.lat};${loc.lon},${loc.lat}?overview=full&geometries=geojson`)
+                    fetch(`/api/route-snapping?coords=${centralWarehouse.lon},${centralWarehouse.lat};${loc.lon},${loc.lat}&overview=full&geometries=geojson`)
                         .then(r => r.json())
                         .then(data => {
                             if (data.routes && data.routes[0]) {
@@ -5975,6 +7231,15 @@ const XLSX = window.XLSX;
                                 alerts={Array.isArray(allAlerts) ? allAlerts : []}
                             />
                         )}
+                        {activeTab === "routes" && (
+                            <RoutesOptimizationView 
+                                orders={orders}
+                                warehouses={warehouses}
+                                hubsCoords={hubsCoords}
+                                onUpdateLaneRoute={handleUpdateLaneRoute}
+                                theme={theme}
+                            />
+                        )}
                     </div>
 
                     {/* Floating Hover Tooltip (Rendered outside nested scroll/hidden bounds, styled as fixed) */}
@@ -6049,6 +7314,16 @@ const XLSX = window.XLSX;
                                 
                                 <div className="space-y-4">
                                     <div className="flex flex-col gap-1.5">
+                                        <label className="text-[10px] font-semibold text-slate-300 uppercase tracking-wider">Windy.com API Key</label>
+                                        <input 
+                                            type="password"
+                                            value={windyApiKeyInput}
+                                            onChange={(e) => setWindyApiKeyInput(e.target.value)}
+                                            placeholder="Paste your Windy.com API key here..."
+                                            className="w-full bg-slate-900 border border-[#1e293b] rounded px-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-brandBlue transition font-mono"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1.5">
                                         <label className="text-[10px] font-semibold text-slate-300 uppercase tracking-wider">OpenWeatherMap API Key</label>
                                         <input 
                                             type="password"
@@ -6109,7 +7384,7 @@ const XLSX = window.XLSX;
                                         Cancel
                                     </button>
                                     <button 
-                                        onClick={() => saveConfigurations(apiKeyInput, weatherApiKeyInput, tomtomApiKeyInput, visualCrossingApiKeyInput, waqiApiKeyInput)}
+                                        onClick={() => saveConfigurations(apiKeyInput, weatherApiKeyInput, tomtomApiKeyInput, visualCrossingApiKeyInput, waqiApiKeyInput, windyApiKeyInput)}
                                         className="px-4 py-1.5 bg-brandBlue hover:bg-brandBlue/90 font-bold rounded text-[11px] text-white transition"
                                     >
                                         Save Configuration
