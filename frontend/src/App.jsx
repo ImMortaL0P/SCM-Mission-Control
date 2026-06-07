@@ -88,7 +88,12 @@ const XLSX = window.XLSX;
                         >
                             <i className="fa-solid fa-warehouse text-sm"></i> Network Locations
                         </div>
-                        <div className="flex items-center gap-3 px-3 py-2.5 hover:bg-slate-800/50 hover:text-white rounded-lg cursor-pointer transition opacity-50 cursor-not-allowed" onClick={() => alert("Under Development. Please use Overview or Weather.")}><i className="fa-solid fa-truck text-sm"></i> Deliveries</div>
+                        <div 
+                            onClick={() => setActiveTab("orders")}
+                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition ${activeTab === "orders" ? "bg-brandBlue/10 text-brandBlue font-bold" : "hover:bg-slate-800/50 hover:text-white"}`}
+                        >
+                            <i className="fa-solid fa-truck text-sm"></i> Orders
+                        </div>
                         <div className="flex items-center justify-between px-3 py-2.5 hover:bg-slate-800/50 hover:text-white rounded-lg cursor-pointer transition opacity-50 cursor-not-allowed" onClick={() => alert("Under Development. Please use Overview or Weather.")}>
                             <span className="flex items-center gap-3"><i className="fa-solid fa-bell text-sm"></i> Alerts</span>
                             <span className="bg-statusRed text-white font-bold text-[9px] px-1.5 py-0.5 rounded-full">12</span>
@@ -1106,6 +1111,476 @@ const XLSX = window.XLSX;
                             </div>
                         )}
                     </div>
+                </div>
+            );
+        };
+
+        // --- ORDER DETAIL MODAL ---
+        const OrderDetailModal = ({ order, onClose, warehouses, hubsCoords, onUpdateOrderRoute }) => {
+            const mapContainerRef = useRef(null);
+            const detailMapRef = useRef(null);
+            const [routeInfo, setRouteInfo] = useState(null);
+            const [altRouteInfo, setAltRouteInfo] = useState(null);
+            const [activeRoute, setActiveRoute] = useState(order.AltPath || "Standard Routing");
+            const [updating, setUpdating] = useState(false);
+
+            useEffect(() => {
+                if (!mapContainerRef.current) return;
+
+                const originName = order.SourceWarehouse || "Patna HQ DC";
+                const origin = warehouses[originName] || warehouses["Patna HQ DC"] || { lat: 25.5941, lon: 85.1376 };
+                const dest = hubsCoords[order.RouteHub] || { lat: order.Latitude, lon: order.Longitude };
+
+                const map = L.map(mapContainerRef.current, { zoomControl: false }).setView([23.5, 88.0], 6);
+                detailMapRef.current = map;
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+                L.marker([origin.lat, origin.lon]).addTo(map).bindPopup(`<b>Origin:</b> ${originName}`);
+                L.marker([dest.lat, dest.lon]).addTo(map).bindPopup(`<b>Destination:</b> ${order.RouteHub}<br/><b>Status:</b> ${order.Status}`);
+
+                const bounds = L.latLngBounds([origin.lat, origin.lon], [dest.lat, dest.lon]);
+                map.fitBounds(bounds, { padding: [50, 50] });
+
+                fetch(`https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${dest.lon},${dest.lat}?overview=full&geometries=geojson&alternatives=true`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.routes && data.routes.length > 0) {
+                            const primaryRoute = data.routes[0];
+                            const pathCoords = primaryRoute.geometry.coordinates.map(c => [c[1], c[0]]);
+                            
+                            L.polyline(pathCoords, {
+                                color: '#2563eb',
+                                weight: 4,
+                                opacity: 0.8
+                            }).addTo(map);
+
+                            setRouteInfo({
+                                distance: (primaryRoute.distance / 1000).toFixed(1),
+                                duration: (primaryRoute.duration / 3600).toFixed(1)
+                            });
+
+                            if (data.routes.length > 1) {
+                                const altRoute = data.routes[1];
+                                const altPathCoords = altRoute.geometry.coordinates.map(c => [c[1], c[0]]);
+                                
+                                L.polyline(altPathCoords, {
+                                    color: '#10b981',
+                                    weight: 3,
+                                    dashArray: '5, 8',
+                                    opacity: 0.7
+                                }).addTo(map);
+
+                                setAltRouteInfo({
+                                    distance: (altRoute.distance / 1000).toFixed(1),
+                                    duration: (altRoute.duration / 3600).toFixed(1)
+                                });
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Failed to fetch OSRM route in detail view:", err);
+                        L.polyline([[origin.lat, origin.lon], [dest.lat, dest.lon]], {
+                            color: '#64748b',
+                            weight: 2,
+                            dashArray: '4, 4'
+                        }).addTo(map);
+                    });
+
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 300);
+
+                return () => {
+                    if (detailMapRef.current) {
+                        detailMapRef.current.remove();
+                        detailMapRef.current = null;
+                    }
+                };
+            }, [order.OrderID, order.AltPath]);
+
+            const handleRouteSwitch = async (newRoute) => {
+                setUpdating(true);
+                try {
+                    await onUpdateOrderRoute(order.OrderID, newRoute);
+                    setActiveRoute(newRoute);
+                    order.AltPath = newRoute;
+                } catch (err) {
+                    alert("Failed to update route: " + err.message);
+                } finally {
+                    setUpdating(false);
+                }
+            };
+
+            return (
+                <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
+                    <div className="bg-panelBg border border-borderSlate w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row h-[90vh] md:h-auto max-h-[90vh]">
+                        <div className="flex-1 min-h-[300px] md:min-h-0 relative bg-slate-950">
+                            <div ref={mapContainerRef} className="w-full h-full"></div>
+                            <div className="absolute bottom-3 left-3 z-[1000] bg-panelBg/90 border border-borderSlate px-3 py-2 rounded-xl text-[10px] space-y-1 backdrop-blur-sm shadow-lg">
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2.5 h-1.5 bg-brandBlue rounded-full"></span>
+                                    <span className="text-slate-300 font-semibold text-[9px] uppercase tracking-wider">Current Path ({activeRoute})</span>
+                                </div>
+                                {altRouteInfo && (
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-2.5 h-1.5 bg-emerald-500 rounded-full border-dashed border"></span>
+                                        <span className="text-slate-300 font-semibold text-[9px] uppercase tracking-wider">Alternative Path</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="w-full md:w-96 p-6 flex flex-col justify-between overflow-y-auto border-t md:border-t-0 md:border-l border-borderSlate text-slate-300">
+                            <div>
+                                <div className="flex justify-between items-start border-b border-borderSlate pb-4 mb-4">
+                                    <div>
+                                        <h3 className="text-sm font-black text-white font-mono">{order.OrderID}</h3>
+                                        <p className="text-[10px] text-slate-400 mt-1">Ordered on: {order.OrderDate}</p>
+                                    </div>
+                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                                        order.Status === "Delayed" 
+                                            ? "bg-red-955/40 text-statusRed border-statusRed/30" 
+                                            : order.Status === "At Risk" 
+                                                ? "bg-orange-955/40 text-statusOrange border-statusOrange/20" 
+                                                : order.Status === "Delivered"
+                                                    ? "bg-emerald-955/40 text-statusGreen border-statusGreen/20"
+                                                    : "bg-blue-955/40 text-brandBlue border-brandBlue/20"
+                                    }`}>{order.Status}</span>
+                                </div>
+
+                                <div className="space-y-4 text-xs">
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <span className="text-slate-500 block text-[9px] uppercase font-bold">Source DC</span>
+                                            <span className="font-semibold text-slate-200">{order.SourceWarehouse || "Patna HQ DC"}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-slate-500 block text-[9px] uppercase font-bold">Destination Hub</span>
+                                            <span className="font-semibold text-slate-200">{order.RouteHub}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <span className="text-slate-500 block text-[9px] uppercase font-bold">Cargo Weight</span>
+                                            <span className="font-semibold text-slate-200 font-mono">{order.Volume.toLocaleString()} kg</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-slate-500 block text-[9px] uppercase font-bold">Baseline Transit</span>
+                                            <span className="font-semibold text-slate-200 font-mono">{order.BaselineTime ? `${order.BaselineTime.toFixed(1)}h` : "--"}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-3 border-t border-borderSlate/40 pt-3">
+                                        <div>
+                                            <span className="text-slate-500 block text-[9px] uppercase font-bold">Total Delay</span>
+                                            <span className={`font-bold font-mono ${order.DelayTime > 0 ? "text-statusRed" : "text-statusGreen"}`}>
+                                                {order.DelayTime > 0 ? `+${order.DelayTime} mins` : "On Time"}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span className="text-slate-500 block text-[9px] uppercase font-bold">Financial Penalty</span>
+                                            <span className={`font-bold font-mono ${order.FinancialImpact > 0 ? "text-amber-400" : "text-slate-400"}`}>
+                                                ₹{order.FinancialImpact.toLocaleString()}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="border-t border-borderSlate/40 pt-3">
+                                        <span className="text-slate-500 block text-[9px] uppercase font-bold">Estimated Delivery Time</span>
+                                        <span className="font-bold text-slate-200 font-mono">{order.ETA}</span>
+                                    </div>
+
+                                    {routeInfo && (
+                                        <div className="bg-slate-900/40 p-3 rounded-lg border border-borderSlate/40 space-y-1.5">
+                                            <span className="text-slate-400 font-bold text-[9px] uppercase tracking-wider block">Live OSRM Geometry Telemetry</span>
+                                            <div className="flex justify-between text-[11px]">
+                                                <span className="text-slate-500">Driving Distance:</span>
+                                                <span className="font-mono text-slate-300 font-semibold">{routeInfo.distance} km</span>
+                                            </div>
+                                            <div className="flex justify-between text-[11px]">
+                                                <span className="text-slate-500">Est. Driving Time:</span>
+                                                <span className="font-mono text-slate-300 font-semibold">{routeInfo.duration} hrs</span>
+                                            </div>
+                                            
+                                            {altRouteInfo && (
+                                                <div className="border-t border-borderSlate/20 mt-2 pt-2 space-y-1">
+                                                    <span className="text-emerald-500 font-bold text-[9px] uppercase tracking-wider block flex items-center gap-1">
+                                                        <i className="fa-solid fa-route"></i> Alternative Route Detected
+                                                    </span>
+                                                    <div className="flex justify-between text-[11px]">
+                                                        <span className="text-slate-500">Alt Distance:</span>
+                                                        <span className="font-mono text-emerald-400 font-semibold">{altRouteInfo.distance} km</span>
+                                                    </div>
+                                                    <div className="flex justify-between text-[11px]">
+                                                        <span className="text-slate-500">Alt Driving Time:</span>
+                                                        <span className="font-mono text-emerald-400 font-semibold">{altRouteInfo.duration} hrs</span>
+                                                    </div>
+                                                    {parseFloat(altRouteInfo.duration) < parseFloat(routeInfo.duration) && (
+                                                        <div className="text-[10px] text-emerald-400 mt-1 font-medium italic">
+                                                            ★ Alternative path is faster by {((parseFloat(routeInfo.duration) - parseFloat(altRouteInfo.duration)) * 60).toFixed(0)} mins!
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    <div className="border-t border-borderSlate/40 pt-3">
+                                        <label className="block text-[9px] uppercase font-bold text-slate-400 mb-1.5">Switch Route Configuration</label>
+                                        <select 
+                                            value={activeRoute}
+                                            onChange={(e) => handleRouteSwitch(e.target.value)}
+                                            disabled={updating}
+                                            className="w-full bg-slate-900 border border-borderSlate rounded px-3 py-2 text-xs text-white outline-none focus:border-brandBlue transition cursor-pointer disabled:opacity-50"
+                                        >
+                                            <option value="Standard Routing">Standard Routing (Main Highway)</option>
+                                            <option value="Alternative Route A">Alternative Route A (Secondary State Hwy)</option>
+                                            <option value="Alternative Route B">Alternative Route B (Express Bypass)</option>
+                                            <option value="Alternative Route C">Alternative Route C (Rural Link Road)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button 
+                                onClick={onClose}
+                                className="w-full mt-6 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg text-xs transition cursor-pointer text-center"
+                            >
+                                Close Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- ORDERS VIEW TAB ---
+        const OrdersView = ({ orders, warehouses, hubsCoords, onUpdateOrderRoute }) => {
+            const [searchTerm, setSearchTerm] = useState("");
+            const [sortField, setSortField] = useState("date-desc");
+            const [statusFilter, setStatusFilter] = useState("all");
+            const [selectedOrder, setSelectedOrder] = useState(null);
+
+            const counts = {
+                all: orders.length,
+                "In Transit": orders.filter(o => o.Status === "In Transit").length,
+                "At Risk": orders.filter(o => o.Status === "At Risk").length,
+                "Delayed": orders.filter(o => o.Status === "Delayed").length,
+                "Delivered": orders.filter(o => o.Status === "Delivered").length
+            };
+
+            const filteredOrders = orders.filter(o => {
+                const searchLower = searchTerm.toLowerCase();
+                const matchesSearch = (
+                    o.OrderID.toLowerCase().includes(searchLower) ||
+                    (o.RouteHub || "").toLowerCase().includes(searchLower) ||
+                    (o.SourceWarehouse || "").toLowerCase().includes(searchLower) ||
+                    (o.AltPath || "").toLowerCase().includes(searchLower)
+                );
+                const matchesStatus = statusFilter === "all" || o.Status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+
+            const sortedOrders = [...filteredOrders].sort((a, b) => {
+                if (sortField === "date-desc") return new Date(b.OrderDate) - new Date(a.OrderDate);
+                if (sortField === "date-asc") return new Date(a.OrderDate) - new Date(b.OrderDate);
+                if (sortField === "volume-desc") return (b.Volume || 0) - (a.Volume || 0);
+                if (sortField === "volume-asc") return (a.Volume || 0) - (b.Volume || 0);
+                if (sortField === "delay-desc") return (b.DelayTime || 0) - (a.DelayTime || 0);
+                if (sortField === "financial-desc") return (b.FinancialImpact || 0) - (a.FinancialImpact || 0);
+                return 0;
+            });
+
+            const groupedByDate = {};
+            sortedOrders.forEach(o => {
+                const date = o.OrderDate || "Unknown Date";
+                if (!groupedByDate[date]) groupedByDate[date] = [];
+                groupedByDate[date].push(o);
+            });
+
+            const sortedDates = Object.keys(groupedByDate).sort((a, b) => {
+                if (sortField === "date-asc") return new Date(a) - new Date(b);
+                return new Date(b) - new Date(a);
+            });
+
+            return (
+                <div className="flex-1 p-6 overflow-y-auto space-y-6 custom-scrollbar text-slate-300 font-sans bg-darkBg">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-borderSlate pb-4">
+                        <div>
+                            <h2 className="text-base font-extrabold tracking-widest text-white flex items-center gap-2">
+                                <span className="w-2.5 h-2.5 bg-brandBlue rounded-full animate-pulse"></span>
+                                ORDER DIRECTORY
+                            </h2>
+                            <p className="text-[10px] text-slate-400 mt-1 uppercase tracking-wider">Grouped by dispatch date with route optimization controls</p>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col lg:flex-row gap-4 justify-between bg-panelBg border border-borderSlate rounded-xl p-4 shadow-md">
+                        <div className="relative flex-1 max-w-md">
+                            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                            <input 
+                                type="text"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                placeholder="Search by Order ID, Hub, Warehouse, Path..."
+                                className="w-full bg-slate-900 border border-borderSlate rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue/30 transition"
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <span className="text-[10px] uppercase font-bold text-slate-500">Sort By</span>
+                            <select 
+                                value={sortField}
+                                onChange={(e) => setSortField(e.target.value)}
+                                className="bg-slate-900 border border-borderSlate rounded-lg px-2.5 py-1.5 text-xs text-slate-200 outline-none focus:border-brandBlue transition cursor-pointer"
+                            >
+                                <option value="date-desc">Date (Latest First)</option>
+                                <option value="date-asc">Date (Oldest First)</option>
+                                <option value="volume-desc">Volume (Highest First)</option>
+                                <option value="volume-asc">Volume (Lowest First)</option>
+                                <option value="delay-desc">Delay Time (Highest First)</option>
+                                <option value="financial-desc">Financial Impact (Highest First)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                        {Object.keys(counts).map(status => {
+                            const isActive = statusFilter === (status === "all" ? "all" : status);
+                            const badgeColor = 
+                                status === "all" ? "bg-slate-800 text-slate-300" :
+                                status === "In Transit" ? "bg-blue-955/60 text-brandBlue border-brandBlue/20" :
+                                status === "At Risk" ? "bg-orange-955/40 text-statusOrange border-statusOrange/20" :
+                                status === "Delayed" ? "bg-red-955/40 text-statusRed border-statusRed/30" :
+                                "bg-emerald-955/40 text-statusGreen border-statusGreen/20";
+                            
+                            return (
+                                <button
+                                    key={status}
+                                    onClick={() => setStatusFilter(status === "all" ? "all" : status)}
+                                    className={`px-3 py-1.5 rounded-lg border text-[11px] font-medium transition cursor-pointer active:scale-95 flex items-center gap-2 ${
+                                        isActive 
+                                            ? "bg-brandBlue text-white border-brandBlue shadow-md shadow-brandBlue/10" 
+                                            : "bg-panelBg border-borderSlate text-slate-400 hover:text-white"
+                                    }`}
+                                >
+                                    <span>{status === "all" ? "All Orders" : status}</span>
+                                    <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold ${isActive ? "bg-white/20 text-white" : badgeColor}`}>
+                                        {counts[status]}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {sortedDates.length > 0 ? (
+                        <div className="space-y-8">
+                            {sortedDates.map(date => {
+                                const ordersForDate = groupedByDate[date];
+                                const formattedDate = new Date(date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                                
+                                return (
+                                    <div key={date} className="space-y-3">
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-xs font-black text-white bg-slate-900 border border-borderSlate px-3 py-1 rounded-lg shadow-sm">
+                                                📅 {formattedDate}
+                                            </span>
+                                            <div className="flex-1 h-px bg-borderSlate/40"></div>
+                                            <span className="text-[10px] text-slate-500 font-semibold font-mono">{ordersForDate.length} {ordersForDate.length === 1 ? 'order' : 'orders'}</span>
+                                        </div>
+
+                                        <div className="bg-panelBg border border-borderSlate rounded-xl overflow-hidden shadow-lg">
+                                            <div className="overflow-x-auto custom-scrollbar">
+                                                <table className="w-full text-left border-collapse text-[11px] font-sans">
+                                                    <thead>
+                                                        <tr className="bg-slate-900/40 border-b border-borderSlate text-slate-400 font-bold uppercase tracking-wider text-[9px]">
+                                                            <th className="py-2.5 px-4">Order ID</th>
+                                                            <th className="py-2.5 px-3">Route (Origin ➔ Hub)</th>
+                                                            <th className="py-2.5 px-3 text-right">Volume</th>
+                                                            <th className="py-2.5 px-3 text-right">Baseline / Delayed</th>
+                                                            <th className="py-2.5 px-3 text-right">Delay</th>
+                                                            <th className="py-2.5 px-3 text-right">Financial Penalty</th>
+                                                            <th className="py-2.5 px-3">Status</th>
+                                                            <th className="py-2.5 px-3">Route Config</th>
+                                                            <th className="py-2.5 px-4 text-center">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-borderSlate/30 text-slate-300">
+                                                        {ordersForDate.map(o => {
+                                                            const statusBadgeColor = 
+                                                                o.Status === "Delayed" ? "bg-red-955/40 text-statusRed border-statusRed/20" :
+                                                                o.Status === "At Risk" ? "bg-orange-955/40 text-statusOrange border-statusOrange/20" :
+                                                                o.Status === "Delivered" ? "bg-emerald-955/40 text-statusGreen border-statusGreen/20" :
+                                                                "bg-blue-955/40 text-brandBlue border-brandBlue/20";
+
+                                                            return (
+                                                                <tr 
+                                                                    key={o.OrderID}
+                                                                    className="hover:bg-slate-900/20 transition duration-150 cursor-pointer"
+                                                                    onClick={() => setSelectedOrder(o)}
+                                                                >
+                                                                    <td className="py-2.5 px-4 font-mono font-bold text-white hover:text-brandBlue transition-colors">{o.OrderID}</td>
+                                                                    <td className="py-2.5 px-3 font-semibold text-slate-300">
+                                                                        {o.SourceWarehouse || "Patna HQ DC"} <span className="text-slate-500 font-normal">➔</span> {o.RouteHub}
+                                                                    </td>
+                                                                    <td className="py-2.5 px-3 text-right font-mono font-medium">{o.Volume.toLocaleString()} kg</td>
+                                                                    <td className="py-2.5 px-3 text-right font-mono font-medium text-slate-400">
+                                                                        {o.BaselineTime ? `${o.BaselineTime.toFixed(1)}h` : "--"} / <span className="text-slate-200">{o.DelayedTime ? `${o.DelayedTime.toFixed(1)}h` : "--"}</span>
+                                                                    </td>
+                                                                    <td className={`py-2.5 px-3 text-right font-mono font-black ${o.DelayTime > 0 ? 'text-statusRed' : 'text-statusGreen'}`}>
+                                                                        {o.DelayTime > 0 ? `+${o.DelayTime}m` : 'On Time'}
+                                                                    </td>
+                                                                    <td className={`py-2.5 px-3 text-right font-mono font-bold ${o.FinancialImpact > 0 ? 'text-amber-400' : 'text-slate-400'}`}>
+                                                                        {o.FinancialImpact > 0 ? `₹${o.FinancialImpact.toLocaleString()}` : '--'}
+                                                                    </td>
+                                                                    <td className="py-2.5 px-3">
+                                                                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${statusBadgeColor}`}>
+                                                                            {o.Status}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td className="py-2.5 px-3 text-slate-400 font-medium italic">{o.AltPath || "Standard Routing"}</td>
+                                                                    <td className="py-2.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
+                                                                        <button 
+                                                                            onClick={() => setSelectedOrder(o)}
+                                                                            className="px-2.5 py-1 bg-slate-900 border border-borderSlate hover:border-brandBlue hover:bg-brandBlue/10 hover:text-white rounded text-[10px] font-bold text-slate-300 transition cursor-pointer active:scale-95"
+                                                                        >
+                                                                            <i className="fa-solid fa-magnifying-glass-chart text-[9px] mr-1 text-brandBlue"></i> Inspect
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        })}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center bg-panelBg border border-borderSlate rounded-2xl py-16 text-center space-y-4">
+                            <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center text-slate-500 border border-borderSlate">
+                                <i className="fa-solid fa-boxes-stacked text-lg"></i>
+                            </div>
+                            <div className="space-y-1">
+                                <h4 className="text-sm font-bold text-white">No Orders Found</h4>
+                                <p className="text-[10px] text-slate-500 max-w-xs">We couldn't find any orders matching "{searchTerm}". Try clearing your filters or search query.</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {selectedOrder && (
+                        <OrderDetailModal 
+                            order={selectedOrder} 
+                            onClose={() => setSelectedOrder(null)} 
+                            warehouses={warehouses}
+                            hubsCoords={hubsCoords}
+                            onUpdateOrderRoute={onUpdateOrderRoute}
+                        />
+                    )}
                 </div>
             );
         };
@@ -2870,6 +3345,30 @@ const XLSX = window.XLSX;
                     console.error("Manual refresh failed:", e);
                 } finally {
                     setIsRefreshing(false);
+                }
+            };
+
+            const handleUpdateOrderRoute = async (orderId, newRoute) => {
+                try {
+                    const res = await fetch("/api/orders/update-route", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ OrderID: orderId, AltPath: newRoute })
+                    });
+                    if (!res.ok) throw new Error("Server responded with an error");
+                    const data = await res.json();
+                    if (data.success) {
+                        setIsRefreshing(true);
+                        setLoadingStage("Updating order route configuration...");
+                        try {
+                            await triggerDataRefresh(true);
+                        } finally {
+                            setIsRefreshing(false);
+                        }
+                    }
+                } catch (err) {
+                    console.error("Failed to update order route:", err);
+                    throw err;
                 }
             };
 
@@ -5040,6 +5539,14 @@ const XLSX = window.XLSX;
                                 newsAlerts={newsAlerts}
                                 onAddOrder={handleAddOrder}
                                 setActiveTab={setActiveTab}
+                            />
+                        )}
+                        {activeTab === "orders" && (
+                            <OrdersView 
+                                orders={orders}
+                                warehouses={warehouses}
+                                hubsCoords={hubsCoords}
+                                onUpdateOrderRoute={handleUpdateOrderRoute}
                             />
                         )}
                     </div>

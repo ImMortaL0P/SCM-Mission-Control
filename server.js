@@ -324,6 +324,28 @@ app.post('/api/keys', (req, res) => {
     }
 });
 
+// POST Update Order Route Configuration
+app.post('/api/orders/update-route', (req, res) => {
+    try {
+        const { OrderID, AltPath } = req.body;
+        if (!OrderID || !AltPath) {
+            return res.status(400).json({ error: "Missing OrderID or AltPath" });
+        }
+        const orders = loadOrdersFromCSV();
+        const index = orders.findIndex(o => o.OrderID === OrderID);
+        if (index === -1) {
+            return res.status(404).json({ error: "Order not found" });
+        }
+        orders[index].AltPath = AltPath;
+        saveOrdersToCSV(orders);
+        console.log(`Successfully updated route for order ${OrderID} to ${AltPath}`);
+        res.json({ success: true });
+    } catch (e) {
+        console.error("Error updating order route:", e);
+        res.status(500).json({ error: e.message });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`SCM Mission Control server running at http://localhost:${PORT}`);
 });
