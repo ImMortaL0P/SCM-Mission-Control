@@ -100,10 +100,10 @@ const XLSX = window.XLSX;
                         >
                             <span className="flex items-center gap-3"><i className="fa-solid fa-bell text-sm"></i> Alerts</span>
                             <span className="bg-statusRed text-white font-bold text-[9px] px-1.5 py-0.5 rounded-full">
-                                {allAlerts.filter(a => {
+                                {Array.isArray(allAlerts) ? allAlerts.filter(a => {
                                     const age = Date.now() - (parseInt(a.timestamp) || 0);
                                     return age <= 24 * 3600 * 1000;
-                                }).length}
+                                }).length : 0}
                             </span>
                         </div>
                         <div 
@@ -3268,7 +3268,7 @@ const XLSX = window.XLSX;
                     }).catch(err => console.error("Error saving weather alerts to backend:", err));
                 } finally {
                     // Load all historical and recent alerts from backend
-                    await fetchAllAlerts();
+                    fetchAllAlerts();
                 }
             };
 
@@ -4525,7 +4525,7 @@ const XLSX = window.XLSX;
                         setLastAqiFetch(nowStr);
                         setLastNewsFetch(nowStr);
                         setLastFetchTime(nowStr);
-                        await fetchAllAlerts();
+                        fetchAllAlerts();
                         setLoading(false);
                     } catch (e) {
                         console.error(e);
@@ -5972,7 +5972,7 @@ const XLSX = window.XLSX;
                         )}
                         {activeTab === "alerts" && (
                             <AlertsView 
-                                alerts={allAlerts}
+                                alerts={Array.isArray(allAlerts) ? allAlerts : []}
                             />
                         )}
                     </div>
