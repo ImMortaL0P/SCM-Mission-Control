@@ -64,7 +64,7 @@ const XLSX = window.XLSX;
 
 
         // --- SYSTEM SUB-COMPONENTS ---
-        const Sidebar = ({ activeTab, setActiveTab, theme, toggleTheme }) => (
+        const Sidebar = ({ activeTab, setActiveTab, theme, toggleTheme, allAlerts }) => (
             <div className="w-64 bg-panelBg border-r border-borderSlate flex flex-col justify-between shrink-0 select-none">
                 <div>
                     <div className="p-5 flex items-center gap-3 border-b border-borderSlate">
@@ -5607,7 +5607,7 @@ const XLSX = window.XLSX;
 
             return (
                 <div className="flex h-full w-full select-none">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} theme={theme} toggleTheme={toggleTheme} />
+                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} theme={theme} toggleTheme={toggleTheme} allAlerts={allAlerts} />
 
                     <div className="flex-1 flex flex-col min-w-0 bg-darkBg h-full overflow-visible">
                         <Topbar 
