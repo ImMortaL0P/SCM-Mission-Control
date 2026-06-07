@@ -15,6 +15,7 @@ const warehousesPath = path.join(__dirname, 'warehouses.csv');
 const hubsPath = path.join(__dirname, 'hubs.csv');
 const csvPath = path.join(__dirname, 'orders.csv');
 const keysPath = path.join(__dirname, 'api_keys.csv');
+const alertsPath = path.join(__dirname, 'alerts.csv');
 
 // Serve specific static data files from root
 app.get('/hubs.csv', (req, res) => {
@@ -28,6 +29,13 @@ app.get('/warehouses.csv', (req, res) => {
 });
 app.get('/api_keys.csv', (req, res) => {
     res.sendFile(keysPath);
+});
+app.get('/alerts.csv', (req, res) => {
+    if (fs.existsSync(alertsPath)) {
+        res.sendFile(alertsPath);
+    } else {
+        res.status(404).send("alerts.csv does not exist yet.");
+    }
 });
 
 // Load API keys from CSV
@@ -103,6 +111,34 @@ function saveOrdersToCSV(orders) {
         fs.writeFileSync(csvPath, csvContent, 'utf8');
     } catch (e) {
         console.error("Error saving orders to CSV:", e);
+    }
+}
+
+// Load alerts from CSV
+function loadAlertsFromCSV() {
+    try {
+        if (fs.existsSync(alertsPath)) {
+            const csvContent = fs.readFileSync(alertsPath, 'utf8');
+            const wb = XLSX.read(csvContent, { type: 'string' });
+            const sheet = wb.Sheets[wb.SheetNames[0]];
+            return XLSX.utils.sheet_to_json(sheet);
+        }
+    } catch (e) {
+        console.error("Error loading alerts from CSV:", e);
+    }
+    return [];
+}
+
+// Save alerts to CSV
+function saveAlertsToCSV(alerts) {
+    try {
+        const newWb = XLSX.utils.book_new();
+        const newSheet = XLSX.utils.json_to_sheet(alerts);
+        XLSX.utils.book_append_sheet(newWb, newSheet, "Alerts");
+        const csvContent = XLSX.write(newWb, { bookType: 'csv', type: 'string' });
+        fs.writeFileSync(alertsPath, csvContent, 'utf8');
+    } catch (e) {
+        console.error("Error saving alerts to CSV:", e);
     }
 }
 
@@ -342,6 +378,63 @@ app.post('/api/orders/update-route', (req, res) => {
         res.json({ success: true });
     } catch (e) {
         console.error("Error updating order route:", e);
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// GET Alerts
+app.get('/api/alerts', (req, res) => {
+    res.json(loadAlertsFromCSV());
+});
+
+// POST Alerts
+app.post('/api/alerts', (req, res) => {
+    try {
+        const body = req.body;
+        if (!body) {
+            return res.status(400).json({ error: "Invalid alert data" });
+        }
+        
+        let newAlerts = [];
+        if (Array.isArray(body)) {
+            newAlerts = body;
+        } else {
+            newAlerts = [body];
+        }
+        
+        const existingAlerts = loadAlertsFromCSV();
+        const existingIds = new Set(existingAlerts.map(a => String(a.id || "")));
+        
+        let addedCount = 0;
+        for (const alert of newAlerts) {
+            if (!alert.id) continue;
+            
+            // Compute/verify timestamp
+            if (!alert.timestamp) {
+                if (alert.pubDate) {
+                    const parsed = Date.parse(alert.pubDate);
+                    alert.timestamp = isNaN(parsed) ? Date.now() : parsed;
+                } else {
+                    alert.timestamp = Date.now();
+                }
+            } else {
+                alert.timestamp = parseInt(alert.timestamp) || Date.now();
+            }
+            
+            if (!existingIds.has(String(alert.id))) {
+                existingAlerts.push(alert);
+                existingIds.add(String(alert.id));
+                addedCount++;
+            }
+        }
+        
+        if (addedCount > 0) {
+            saveAlertsToCSV(existingAlerts);
+            console.log(`Successfully added ${addedCount} alerts to alerts.csv`);
+        }
+        res.json({ success: true, added: addedCount, total: existingAlerts.length });
+    } catch (e) {
+        console.error("Error saving alert(s):", e);
         res.status(500).json({ error: e.message });
     }
 });

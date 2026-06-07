@@ -94,9 +94,17 @@ const XLSX = window.XLSX;
                         >
                             <i className="fa-solid fa-truck text-sm"></i> Orders
                         </div>
-                        <div className="flex items-center justify-between px-3 py-2.5 hover:bg-slate-800/50 hover:text-white rounded-lg cursor-pointer transition opacity-50 cursor-not-allowed" onClick={() => alert("Under Development. Please use Overview or Weather.")}>
+                        <div 
+                            onClick={() => setActiveTab("alerts")}
+                            className={`flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition ${activeTab === "alerts" ? "bg-brandBlue/10 text-brandBlue font-bold" : "hover:bg-slate-800/50 hover:text-white"}`}
+                        >
                             <span className="flex items-center gap-3"><i className="fa-solid fa-bell text-sm"></i> Alerts</span>
-                            <span className="bg-statusRed text-white font-bold text-[9px] px-1.5 py-0.5 rounded-full">12</span>
+                            <span className="bg-statusRed text-white font-bold text-[9px] px-1.5 py-0.5 rounded-full">
+                                {allAlerts.filter(a => {
+                                    const age = Date.now() - (parseInt(a.timestamp) || 0);
+                                    return age <= 24 * 3600 * 1000;
+                                }).length}
+                            </span>
                         </div>
                         <div 
                             onClick={() => setActiveTab("weather")}
@@ -1612,6 +1620,355 @@ const XLSX = window.XLSX;
             );
         };
 
+        // --- ALERTS DETAIL MODAL ---
+        const AlertDetailModal = ({ alert, onClose }) => {
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (e.key === "Escape") onClose();
+                };
+                window.addEventListener("keydown", handleKeyDown);
+                return () => window.removeEventListener("keydown", handleKeyDown);
+            }, [onClose]);
+
+            const handleBackdropClick = (e) => {
+                if (e.target === e.currentTarget) {
+                    onClose();
+                }
+            };
+
+            const sourceName = alert.id && alert.id.startsWith("telemetry-") 
+                ? (alert.title.toLowerCase().includes("pollution") || alert.title.toLowerCase().includes("smog") ? "WAQI Air Quality Telemetry" : "Open-Meteo Weather Telemetry") 
+                : "Google News RSS";
+
+            const badgeColor = 
+                alert.risk === "Critical" ? "bg-red-955/40 text-statusRed border-statusRed/30" :
+                alert.risk === "High" ? "bg-orange-955/40 text-statusOrange border-statusOrange/30" :
+                alert.risk === "Medium" ? "bg-amber-955/40 text-statusOrange border-amber-500/20" : 
+                "bg-emerald-955/40 text-statusGreen border-statusGreen/20";
+
+            return (
+                <div 
+                    onClick={handleBackdropClick}
+                    className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm"
+                >
+                    <div className="relative w-full max-w-xl bg-panelBg border border-borderSlate rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden text-slate-300 font-sans animate-fadeIn">
+                        {/* Header */}
+                        <div className="flex justify-between items-center px-6 py-4 border-b border-borderSlate/60 bg-slate-900/40">
+                            <div className="flex items-center gap-3">
+                                <span className={`text-xs font-black uppercase px-2.5 py-1 rounded border ${badgeColor}`}>
+                                    {alert.risk} Risk
+                                </span>
+                                <span className="text-[10px] text-slate-500 font-mono uppercase tracking-wider">
+                                    ID: {alert.id}
+                                </span>
+                            </div>
+                            <button 
+                                onClick={onClose}
+                                className="text-slate-400 hover:text-white transition-colors cursor-pointer w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-800"
+                            >
+                                <i className="fa-solid fa-xmark text-base"></i>
+                            </button>
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+                            <div className="space-y-2">
+                                <div className="text-[10px] uppercase font-black tracking-widest text-slate-500">Alert Title</div>
+                                <h3 className="text-base font-extrabold text-white leading-snug">
+                                    {alert.title}
+                                </h3>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1.5 p-3 rounded-xl bg-slate-900/40 border border-borderSlate/30">
+                                    <div className="text-[9px] uppercase font-black text-slate-500 tracking-wider">Target Location (Hub)</div>
+                                    <div className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                                        <i className="fa-solid fa-location-dot text-brandBlue text-[10px]"></i>
+                                        {alert.hub}
+                                    </div>
+                                </div>
+                                <div className="space-y-1.5 p-3 rounded-xl bg-slate-900/40 border border-borderSlate/30">
+                                    <div className="text-[9px] uppercase font-black text-slate-500 tracking-wider">Delay Impact</div>
+                                    <div className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                                        <i className="fa-solid fa-clock text-amber-400 text-[10px]"></i>
+                                        +{alert.delay} mins
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <div className="text-[10px] uppercase font-black tracking-widest text-slate-500">Telemetry / News Description</div>
+                                <p className="text-xs leading-relaxed text-slate-300 bg-slate-900/30 p-3 rounded-xl border border-borderSlate/20">
+                                    {alert.desc}
+                                </p>
+                            </div>
+
+                            <div className="space-y-3">
+                                <div className="text-[10px] uppercase font-black tracking-widest text-slate-500">Source & Dispatch Details</div>
+                                <div className="divide-y divide-borderSlate/30 bg-slate-900/40 border border-borderSlate/30 rounded-xl overflow-hidden text-xs">
+                                    <div className="flex justify-between py-2.5 px-3">
+                                        <span className="text-slate-500 font-medium">Source Platform</span>
+                                        <span className="font-bold text-slate-200">{sourceName}</span>
+                                    </div>
+                                    <div className="flex justify-between py-2.5 px-3">
+                                        <span className="text-slate-500 font-medium">Published / Recorded</span>
+                                        <span className="font-mono text-slate-200">{alert.pubDate}</span>
+                                    </div>
+                                    <div className="flex justify-between py-2.5 px-3 items-center">
+                                        <span className="text-slate-500 font-medium">Direct Link</span>
+                                        <a 
+                                            href={alert.link} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            className="text-brandBlue hover:underline font-bold flex items-center gap-1"
+                                        >
+                                            View Source Link <i className="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="px-6 py-4 border-t border-borderSlate/60 bg-slate-900/40 flex justify-end">
+                            <button
+                                onClick={onClose}
+                                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-borderSlate hover:border-slate-500 rounded-lg text-xs font-bold text-slate-350 transition cursor-pointer active:scale-95"
+                            >
+                                Close Detail View
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- ALERTS VIEW TAB ---
+        const AlertsView = ({ alerts }) => {
+            const [searchTerm, setSearchTerm] = useState("");
+            const [sortField, setSortField] = useState("date-desc");
+            const [riskFilter, setRiskFilter] = useState("all");
+            const [selectedAlert, setSelectedAlert] = useState(null);
+
+            const counts = {
+                all: alerts.length,
+                Critical: alerts.filter(a => a.risk === "Critical").length,
+                High: alerts.filter(a => a.risk === "High").length,
+                Medium: alerts.filter(a => a.risk === "Medium").length,
+                Low: alerts.filter(a => a.risk === "Low").length
+            };
+
+            const filteredAlerts = alerts.filter(a => {
+                const searchLower = searchTerm.toLowerCase();
+                const sourceName = a.id && a.id.startsWith("telemetry-") 
+                    ? (a.title.toLowerCase().includes("pollution") || a.title.toLowerCase().includes("smog") ? "waqi air quality telemetry" : "open-meteo weather telemetry") 
+                    : "google news rss";
+                
+                const matchesSearch = (
+                    (a.id || "").toLowerCase().includes(searchLower) ||
+                    (a.title || "").toLowerCase().includes(searchLower) ||
+                    (a.desc || "").toLowerCase().includes(searchLower) ||
+                    (a.hub || "").toLowerCase().includes(searchLower) ||
+                    sourceName.includes(searchLower)
+                );
+                const matchesRisk = riskFilter === "all" || a.risk === riskFilter;
+                return matchesSearch && matchesRisk;
+            });
+
+            const sortedAlerts = [...filteredAlerts].sort((a, b) => {
+                if (sortField === "date-desc") return (parseInt(b.timestamp) || 0) - (parseInt(a.timestamp) || 0);
+                if (sortField === "date-asc") return (parseInt(a.timestamp) || 0) - (parseInt(b.timestamp) || 0);
+                if (sortField === "delay-desc") return (b.delay || 0) - (a.delay || 0);
+                if (sortField === "risk-desc") {
+                    const riskWeight = { Critical: 4, High: 3, Medium: 2, Low: 1 };
+                    return (riskWeight[b.risk] || 0) - (riskWeight[a.risk] || 0);
+                }
+                return 0;
+            });
+
+            // Segregate by Recents (last 24 hours) and Historical (older than 24 hours)
+            const now = Date.now();
+            const recentAlerts = sortedAlerts.filter(a => (now - (parseInt(a.timestamp) || 0)) <= 24 * 3600 * 1000);
+            const historicalAlerts = sortedAlerts.filter(a => (now - (parseInt(a.timestamp) || 0)) > 24 * 3600 * 1000);
+
+            const renderAlertTable = (alertsList, title, icon) => {
+                return (
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                            <span className="text-xs font-black text-white bg-slate-900 border border-borderSlate px-3 py-1 rounded-lg shadow-sm flex items-center gap-1.5">
+                                <i className={`fa-solid ${icon}`}></i> {title}
+                            </span>
+                            <div className="flex-1 h-px bg-borderSlate/40"></div>
+                            <span className="text-[10px] text-slate-500 font-semibold font-mono">{alertsList.length} {alertsList.length === 1 ? 'alert' : 'alerts'}</span>
+                        </div>
+
+                        {alertsList.length > 0 ? (
+                            <div className="bg-panelBg border border-borderSlate rounded-xl overflow-hidden shadow-lg">
+                                <div className="overflow-x-auto custom-scrollbar">
+                                    <table className="w-full text-left border-collapse text-[11px] font-sans">
+                                        <thead>
+                                            <tr className="bg-slate-900/40 border-b border-borderSlate text-slate-400 font-bold uppercase tracking-wider text-[9px]">
+                                                <th className="py-2.5 px-4">Publish Date</th>
+                                                <th className="py-2.5 px-3">Location / Hub</th>
+                                                <th className="py-2.5 px-3">Severity</th>
+                                                <th className="py-2.5 px-3">Alert Title</th>
+                                                <th className="py-2.5 px-3 text-right">Delay Impact</th>
+                                                <th className="py-2.5 px-3">Source Channel</th>
+                                                <th className="py-2.5 px-4 text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-borderSlate/30 text-slate-300">
+                                            {alertsList.map(a => {
+                                                const badgeColor = 
+                                                    a.risk === "Critical" ? "bg-red-955/40 text-statusRed border-statusRed/20" :
+                                                    a.risk === "High" ? "bg-orange-955/40 text-statusOrange border-statusOrange/20" :
+                                                    a.risk === "Medium" ? "bg-amber-955/40 text-statusOrange border-amber-500/20" : 
+                                                    "bg-emerald-955/40 text-statusGreen border-statusGreen/20";
+                                                
+                                                const sourceName = a.id && a.id.startsWith("telemetry-") 
+                                                    ? (a.title.toLowerCase().includes("pollution") || a.title.toLowerCase().includes("smog") ? "Air Telemetry" : "Weather Telemetry") 
+                                                    : "Google News";
+
+                                                return (
+                                                    <tr 
+                                                        key={a.id}
+                                                        className="hover:bg-slate-900/20 transition duration-150 cursor-pointer"
+                                                        onClick={() => setSelectedAlert(a)}
+                                                    >
+                                                        <td className="py-2.5 px-4 font-mono font-bold text-slate-350">{a.pubDate}</td>
+                                                        <td className="py-2.5 px-3 font-semibold text-white flex items-center gap-1.5 mt-1">
+                                                            <i className="fa-solid fa-location-dot text-brandBlue text-[10px]"></i>
+                                                            {a.hub}
+                                                        </td>
+                                                        <td className="py-2.5 px-3">
+                                                            <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold border uppercase ${badgeColor}`}>
+                                                                {a.risk}
+                                                            </span>
+                                                        </td>
+                                                        <td className="py-2.5 px-3 font-medium text-slate-300 max-w-xs truncate">{a.title}</td>
+                                                        <td className={`py-2.5 px-3 text-right font-mono font-black text-amber-400`}>
+                                                            +{a.delay}m
+                                                        </td>
+                                                        <td className="py-2.5 px-3 text-slate-400 font-medium italic">{sourceName}</td>
+                                                        <td className="py-2.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
+                                                            <button 
+                                                                onClick={() => setSelectedAlert(a)}
+                                                                className="px-2.5 py-1 bg-slate-900 border border-borderSlate hover:border-brandBlue hover:bg-brandBlue/10 hover:text-white rounded text-[10px] font-bold text-slate-300 transition cursor-pointer active:scale-95"
+                                                            >
+                                                                <i className="fa-solid fa-magnifying-glass text-[9px] mr-1 text-brandBlue"></i> Inspect
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="bg-panelBg border border-borderSlate rounded-xl p-8 text-center flex flex-col items-center justify-center gap-2">
+                                <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-500 border border-borderSlate">
+                                    <i className="fa-solid fa-bell-slash text-sm"></i>
+                                </div>
+                                <div className="space-y-1">
+                                    <h4 className="text-xs font-bold text-white">No Alerts Found</h4>
+                                    <p className="text-[10px] text-slate-500">There are no logged alerts for this category matching your search.</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+            };
+
+            return (
+                <div className="flex-1 p-6 overflow-y-auto space-y-6 custom-scrollbar text-slate-300 font-sans bg-darkBg">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-borderSlate pb-4">
+                        <div>
+                            <h2 className="text-base font-extrabold tracking-widest text-white flex items-center gap-2">
+                                <span className="w-2.5 h-2.5 bg-statusRed rounded-full animate-pulse"></span>
+                                LOGISTICS ALERT SYSTEM
+                            </h2>
+                            <p className="text-[10px] text-slate-400 mt-1 uppercase tracking-wider">Real-time and archived alerts with severity classification</p>
+                        </div>
+                    </div>
+
+                    {/* Filter controls */}
+                    <div className="flex flex-col lg:flex-row gap-4 justify-between bg-panelBg border border-borderSlate rounded-xl p-4 shadow-md">
+                        <div className="relative flex-1 max-w-md">
+                            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                            <input 
+                                type="text"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                placeholder="Search by Alert Title, Location, Source, ID..."
+                                className="w-full bg-slate-900 border border-borderSlate rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue/30 transition"
+                            />
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-4">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] uppercase font-bold text-slate-500">Sort By</span>
+                                <select 
+                                    value={sortField}
+                                    onChange={(e) => setSortField(e.target.value)}
+                                    className="bg-slate-900 border border-borderSlate rounded-lg px-2.5 py-1.5 text-xs text-slate-200 outline-none focus:border-brandBlue transition cursor-pointer"
+                                >
+                                    <option value="date-desc">Date (Latest First)</option>
+                                    <option value="date-asc">Date (Oldest First)</option>
+                                    <option value="delay-desc">Delay Impact (Highest First)</option>
+                                    <option value="risk-desc">Severity (Critical First)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Risk Filter Badges */}
+                    <div className="flex flex-wrap gap-2">
+                        {Object.keys(counts).map(risk => {
+                            const isActive = riskFilter === risk;
+                            const badgeColor = 
+                                risk === "all" ? "bg-slate-800 text-slate-350" :
+                                risk === "Critical" ? "bg-red-955/40 text-statusRed border-statusRed/20" :
+                                risk === "High" ? "bg-orange-955/40 text-statusOrange border-statusOrange/20" :
+                                risk === "Medium" ? "bg-amber-955/40 text-statusOrange border-amber-500/20" : 
+                                "bg-emerald-955/40 text-statusGreen border-statusGreen/20";
+                            
+                            return (
+                                <button
+                                    key={risk}
+                                    onClick={() => setRiskFilter(risk)}
+                                    className={`px-3 py-1.5 rounded-lg border text-[11px] font-medium transition cursor-pointer active:scale-95 flex items-center gap-2 ${
+                                        isActive 
+                                            ? "bg-brandBlue text-white border-brandBlue shadow-md shadow-brandBlue/10" 
+                                            : "bg-panelBg border-borderSlate text-slate-400 hover:text-white"
+                                    }`}
+                                >
+                                    <span>{risk === "all" ? "All Severity Levels" : `${risk} Risk`}</span>
+                                    <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold ${isActive ? "bg-white/20 text-white" : badgeColor}`}>
+                                        {counts[risk]}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* Table Segregations */}
+                    <div className="space-y-8">
+                        {renderAlertTable(recentAlerts, "Recent Alerts (Last 24 Hours)", "fa-clock")}
+                        {renderAlertTable(historicalAlerts, "Historical Alerts (Older than 24 Hours)", "fa-clock-rotate-left")}
+                    </div>
+
+                    {/* Alert Detail Modal */}
+                    {selectedAlert && (
+                        <AlertDetailModal 
+                            alert={selectedAlert}
+                            onClose={() => setSelectedAlert(null)}
+                        />
+                    )}
+                </div>
+            );
+        };
+
         // --- ADD LOCATION VIEW ---
         const AddLocationView = ({ warehouses, hubsCoords, weatherData, aqiData, onAddWarehouse, onAddCity }) => {
             const [wName, setWName] = useState("");
@@ -2461,6 +2818,7 @@ const XLSX = window.XLSX;
             const [hubsCoords, setHubsCoords] = useState({});
             const [orders, setOrders] = useState([]);
             const [newsAlerts, setNewsAlerts] = useState([]);
+            const [allAlerts, setAllAlerts] = useState([]);
             const [aqiData, setAqiData] = useState({});
 
             const [routeNetwork, setRouteNetwork] = useState([]);
@@ -2613,6 +2971,18 @@ const XLSX = window.XLSX;
                 return () => clearInterval(clockInterval);
             }, []);
 
+            const fetchAllAlerts = async () => {
+                try {
+                    const res = await fetch("/api/alerts");
+                    if (res.ok) {
+                        const data = await res.json();
+                        setAllAlerts(data);
+                    }
+                } catch (e) {
+                    console.error("Error fetching all alerts from backend:", e);
+                }
+            };
+
             // Fetch live news using allorigins proxy or fallback to generated local alerts
             const fetchLiveNewsAlerts = async (currentHubs, activeWeatherData = null, activeAqiData = null) => {
                 console.log("Fetching live logistics news...");
@@ -2753,7 +3123,7 @@ const XLSX = window.XLSX;
                         }
 
                         alerts.push({
-                            id: `telemetry-weather-alert-${cityName}-${idx}-${daySeed}`,
+                            id: `telemetry-${cityName.toLowerCase()}-${title.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${daySeed}-${currentHour}`,
                             hub: hubKey,
                             title: title,
                             desc: `[Verified Live Status] ${desc} (Delay Impact: +${delay} mins)`,
@@ -2761,7 +3131,8 @@ const XLSX = window.XLSX;
                             icon: icon,
                             link: "https://open-meteo.com",
                             delay: delay,
-                            pubDate: new Date().toLocaleDateString() + ", " + ((currentHour + 24) % 24) + ":00"
+                            pubDate: new Date().toLocaleDateString() + ", " + ((currentHour + 24) % 24) + ":00",
+                            timestamp: Date.now()
                         });
                     });
 
@@ -2846,8 +3217,9 @@ const XLSX = window.XLSX;
                                 risk = "Medium";
                             }
                             
+                            const alertTimestamp = pubDateText ? Date.parse(pubDateText) : Date.now();
                             parsedAlerts.push({
-                                id: `news-${i}-${Date.now()}`,
+                                id: "news-" + cleanedTitle.replace(/[^a-zA-Z0-9]/g, "").substring(0, 45) + "-" + (isNaN(alertTimestamp) ? Date.now() : alertTimestamp),
                                 hub: hubKey,
                                 title: cleanedTitle,
                                 desc: `[Live News] ${cleanedTitle} (Delay Impact: +${delay} mins)`,
@@ -2855,27 +3227,48 @@ const XLSX = window.XLSX;
                                 icon: icon,
                                 link: linkText,
                                 delay: delay,
-                                pubDate: pubDateText
+                                pubDate: pubDateText,
+                                timestamp: isNaN(alertTimestamp) ? Date.now() : alertTimestamp
                             });
                         }
                     }
                     
+                    let combined = [];
                     if (parsedAlerts.length >= 10) {
                         console.log(`Successfully parsed ${parsedAlerts.length} live logistics news alerts!`);
-                        setNewsAlerts(parsedAlerts.slice(0, 10));
+                        combined = parsedAlerts.slice(0, 10);
+                        setNewsAlerts(combined);
                     } else {
                         console.log(`Parsed ${parsedAlerts.length} news alerts. Populating remaining slots with live weather alerts.`);
                         const existingNewsCities = parsedAlerts.map(a => a.hub.split(",")[0].trim().toLowerCase());
                         const remainingCities = allTransitCities.filter(c => !existingNewsCities.includes(c.toLowerCase()));
                         
                         const weatherAlerts = generateWeatherAlertsForCities(remainingCities.length > 0 ? remainingCities : allTransitCities, wData, aData);
-                        const combined = [...parsedAlerts, ...weatherAlerts];
+                        combined = [...parsedAlerts, ...weatherAlerts];
                         setNewsAlerts(combined.slice(0, 10));
                     }
+                    
+                    // POST combined alerts to backend to persist
+                    await fetch("/api/alerts", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(combined)
+                    }).catch(err => console.error("Error saving alerts to backend:", err));
+                    
                 } catch (e) {
                     console.error("Failed to fetch live news from proxy, generating weather alerts:", e);
                     const weatherAlerts = generateWeatherAlertsForCities(allTransitCities, wData, aData);
                     setNewsAlerts(weatherAlerts.slice(0, 10));
+                    
+                    // POST weather alerts to backend to persist
+                    await fetch("/api/alerts", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(weatherAlerts)
+                    }).catch(err => console.error("Error saving weather alerts to backend:", err));
+                } finally {
+                    // Load all historical and recent alerts from backend
+                    await fetchAllAlerts();
                 }
             };
 
@@ -4132,6 +4525,7 @@ const XLSX = window.XLSX;
                         setLastAqiFetch(nowStr);
                         setLastNewsFetch(nowStr);
                         setLastFetchTime(nowStr);
+                        await fetchAllAlerts();
                         setLoading(false);
                     } catch (e) {
                         console.error(e);
@@ -5574,6 +5968,11 @@ const XLSX = window.XLSX;
                                 warehouses={warehouses}
                                 hubsCoords={hubsCoords}
                                 onUpdateOrderRoute={handleUpdateOrderRoute}
+                            />
+                        )}
+                        {activeTab === "alerts" && (
+                            <AlertsView 
+                                alerts={allAlerts}
                             />
                         )}
                     </div>
